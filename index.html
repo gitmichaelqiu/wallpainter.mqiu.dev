@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Set Apple Aerial wallpapers by macOS desktop space. Follow system appearance, choose fixed wallpapers, or keep a space manual.">
+    <meta name="theme-color" content="#002FA7">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WallPainter — Aerial Wallpapers for Every Space">
+    <meta name="twitter:description" content="Set Apple Aerial wallpapers by macOS desktop space. Follow system appearance, choose fixed wallpapers, or keep a space manual.">
+    <meta name="twitter:image" content="https://wallpainter.mqiu.dev/resources/works/wallpainter.png">
+    <meta property="og:title" content="WallPainter — Aerial Wallpapers for Every Space">
+    <meta property="og:description" content="A different Aerial wallpaper for every macOS desktop, with rules that follow system appearance.">
+    <meta property="og:image" content="https://wallpainter.mqiu.dev/resources/works/wallpainter.png">
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="1024">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://wallpainter.mqiu.dev/">
+    <link rel="canonical" href="https://wallpainter.mqiu.dev/">
+    <link rel="icon" type="image/png" href="resources/works/wallpainter.png">
+    <script>
+        (function () {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme !== 'dark' && theme !== 'light') {
+                    var match = document.cookie.match(/(?:^|; )theme=([^;]*)/);
+                    theme = match ? decodeURIComponent(match[1]) : null;
+                }
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (error) {}
+        })();
+    </script>
+    <title>WallPainter — Aerial Wallpapers for Every Space</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'klein-blue': '#002FA7', 'klein-blue-bright': '#0038c8',
+                        'bg-dark': '#0a0a0a', 'bg-light': '#FAFAF6', 'deep-navy': '#020412',
+                        gold: '#D4A853', 'gold-light': '#E8C97A'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], display: ['Syncopate', 'sans-serif'],
+                        editorial: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="scripts/particles.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="scripts/page-transition.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Syncopate:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .hero__icon-3d {
+            width: min(80%, 32rem);
+            aspect-ratio: 1;
+            position: relative;
+            z-index: 10;
+            margin: 0;
+            pointer-events: none;
+        }
+        .hero__icon-3d img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 28px 56px rgba(0, 0, 0, 0.25));
+        }
+        .hero__bg { opacity: 1; }
+        .hero__text .mask-inner { visibility: visible; }
+        #home .hero__content { gap: 0.3rem; margin-top: -4rem; }
+        .hero__icon-3d img, .site-preview img { user-select: none; }
+        .site-preview {
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            background: var(--bg-secondary);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12);
+        }
+        .site-preview img { display: block; width: 100%; height: auto; }
+        .site-preview figcaption {
+            padding: 1rem 1.25rem 1.2rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border-top: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
+        }
+        .feature-card {
+            min-height: 16rem;
+            padding: clamp(1.4rem, 3.2vw, 2.6rem);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            background: color-mix(in srgb, var(--bg-primary) 76%, transparent);
+        }
+        .feature-card-icon {
+            width: 1.35rem;
+            height: 1.35rem;
+            margin-bottom: 2.4rem;
+            color: var(--klein-blue-text);
+        }
+        .feature-card h3 {
+            margin-bottom: 0.75rem;
+            font-size: clamp(1.35rem, 2vw, 1.8rem);
+            font-weight: 600;
+            letter-spacing: -0.045em;
+        }
+        .feature-card p {
+            max-width: 32rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .install-note {
+            max-width: 52rem;
+            padding: 1rem 1.2rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.55);
+            color: rgba(255, 255, 255, 0.78);
+            font: 0.95rem/1.65 'Inter', sans-serif;
+        }
+        @media (max-width: 767px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .feature-card { min-height: auto; }
+            .feature-card-icon { margin-bottom: 1.5rem; }
+            .site-preview figcaption { padding: 0.8rem 1rem 1rem; }
+            #home .hero__content { margin-top: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+
+<body class="theme-base">
+    <div id="preloader" style="position:fixed;inset:0;z-index:10002;background:#002FA7;display:grid;place-items:center;color:#fff;font:700 clamp(1rem,4vw,2rem) Inter,sans-serif;letter-spacing:-.05em;transition:opacity .5s ease;">
+        wallpainter.mqiu.dev
+    </div>
+
+    <div id="app" class="relative min-h-screen">
+        <div class="grid-lines" aria-hidden="true"><div v-for="i in 12" :key="i" class="grid-line"></div></div>
+
+        <div class="nav-dock hide-mobile" :class="{ 'nav-dock--visible': showNavDock }" :style="{ bottom: navDockBottom }">
+            <button @click="scrollToTop" class="nav-dock__btn" :aria-label="t('nav.backToTop')"><i data-lucide="arrow-up" class="w-5 h-5"></i></button>
+            <button @click="handleNavClick('install')" class="nav-dock__btn" :aria-label="t('quicknav.install')"><i data-lucide="download" class="w-5 h-5"></i></button>
+            <div class="nav-dock__label"><span class="nav-dock__label-text">{{ sectionLabels[activeSection] || activeSection }}</span></div>
+            <button @click="toggleTheme" class="nav-dock__btn" :aria-label="themeMode === 'system' ? t('nav.switchLight') : themeMode === 'light' ? t('nav.switchDark') : t('nav.switchSystem')">
+                <span v-if="themeMode === 'dark'"><i data-lucide="moon" class="w-5 h-5"></i></span>
+                <span v-else-if="themeMode === 'light'"><i data-lucide="sun" class="w-5 h-5"></i></span>
+                <span v-else><i data-lucide="sun-moon" class="w-5 h-5"></i></span>
+            </button>
+            <button @click="toggleSidebar" class="nav-dock__btn" :class="{ active: isSidebarOpen }" :aria-label="t('nav.menu')"><i data-lucide="menu" class="w-5 h-5"></i></button>
+        </div>
+
+        <main class="transition-opacity duration-700" :class="{ 'opacity-10': isSidebarOpen }">
+            <section id="home" class="hero">
+                <div class="hero__bg"></div>
+                <div id="particle-layer" class="absolute inset-0 z-[1] pointer-events-none" aria-hidden="true"></div>
+                <nav class="hero__quicknav hide-mobile" aria-label="Main navigation">
+                    <div class="hero__quicknav-logo">
+                        <a href="https://mqiu.dev" aria-label="Michael Qiu home" style="cursor:pointer!important">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1039.8 581.48" fill="white" style="width:4.5rem;height:auto" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M634.68,10c0-5.5-2.48-6.24-5.51-1.65l-244.88,370.96c-3.03,4.59-5.51,12.85-5.51,18.35v173.83c0,5.5,4.5,10,10,10h235.9c5.5,0,10-4.5,10-10V10Z" />
+                                <path fill-rule="evenodd" d="M379.26,10c0-5.5-2.48-6.24-5.5-1.65L1.41,573.13c-3.03,4.59-1,8.35,4.5,8.35H241.47c5.5,0,12.48-3.76,15.5-8.35l116.77-177.13c3.03-4.59,5.5-12.85,5.5-18.35V10Z" />
+                                <path d="M1033.98,581.48c5.5,0,7.45-3.71,4.34-8.25l-237.54-346.18c-3.11-4.54-10.16-8.25-15.66-8.25h-109.7c-5.5,0-10,4.5-10,10v342.67c0,5.5,4.5,10,10,10h358.56Z" />
+                                <path d="M790.05,211.64c2.79,4.74,7.36,4.74,10.15,0L919.75,8.62C922.54,3.88,920.32,0,914.82,0h-239.41c-5.5,0-7.72,3.88-4.93,8.62l119.55,203.03Z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="hero__quicknav-cols">
+                        <div class="hero__quicknav-col">
+                            <div class="hero__quicknav-label">{{ t('quicknav.page') }}</div>
+                            <a v-for="link in pageLinks" :key="link.id" @click.prevent="handleNavClick(link.id)" :href="'#' + link.id" class="hero__quicknav-link">{{ t(link.key) }}</a>
+                        </div>
+                        <div class="hero__quicknav-col">
+                            <div class="hero__quicknav-label">{{ t('quicknav.links') }}</div>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.github') }}</a>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.releases') }}</a>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.issues') }}</a>
+                            <a href="https://mqiu.dev" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.website') }}</a>
+                        </div>
+                        <div class="hero__quicknav-series-cols">
+                            <div class="hero__quicknav-col">
+                                <div class="hero__quicknav-label">{{ t('quicknav.more') }} <span class="suite-series">/ {{ t('quicknav.workflowSuite') }}</span></div>
+                                <a href="https://desktoprenamer.mqiu.dev" target="_blank" rel="noopener" class="hero__quicknav-link">DesktopRenamer</a>
+                                <a href="https://spaceswitcher.mqiu.dev" target="_blank" rel="noopener" class="hero__quicknav-link">SpaceSwitcher</a>
+                                <a href="https://optclicker.mqiu.dev" target="_blank" rel="noopener" class="hero__quicknav-link">OptClicker</a>
+                            </div>
+                            <div class="hero__quicknav-col">
+                                <div class="hero__quicknav-label"><span class="suite-series">/ {{ t('quicknav.mediaSuite') }}</span></div>
+                                <a href="https://vtplayer.mqiu.dev" target="_blank" rel="noopener" class="hero__quicknav-link">VTPlayer</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero__quicknav-lang" aria-label="Language">
+                        <button @click="setLang('en')" class="hero__quicknav-lang-btn hero__quicknav-lang-opt" :class="{ 'is-active': lang === 'en' }" aria-label="Switch to English">EN</button>
+                        <span class="hero__quicknav-lang-sep">/</span>
+                        <button @click="setLang('zh')" class="hero__quicknav-lang-btn hero__quicknav-lang-opt" :class="{ 'is-active': lang === 'zh' }" aria-label="切换到中文">中文</button>
+                    </div>
+                </nav>
+                <div class="hero__content">
+                    <div class="hero__icon-3d"><img src="resources/works/wallpainter.png" alt="" fetchpriority="high"></div>
+                    <div class="hero__text">
+                        <div class="mask-wrap"><h1 class="hero__name mask-inner">{{ t('hero.heading') }}</h1></div>
+                        <div class="mask-wrap"><p class="hero__tagline mask-inner">{{ t('hero.tagline') }}</p></div>
+                        <div class="flex flex-wrap gap-3 mt-8">
+                            <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" data-btn>
+                                <div data-btn-bg></div><div data-btn-inner :data-text="t('install.download')"><span data-btn-text>{{ t('install.download') }}</span></div>
+                            </a>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="hero__quicknav-link self-center">{{ t('quicknav.github') }} ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="overview" class="section-rk">
+                <div class="container">
+                    <div class="content-grid mb-16">
+                        <div class="content-label"><svg class="section-label-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M0 0L14 14H0V0Z" /></svg>{{ t('overview.label') }}</div>
+                        <div class="content-body">
+                            <div class="mask-wrap"><h2 class="heading-l mb-10 mask-inner" v-html="t('overview.headingHtml')"></h2></div>
+                            <div class="mask-wrap"><p class="paragraph-l max-w-3xl mask-inner" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('overview.body') }}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="demo" class="section-rk">
+                <div class="container">
+                    <div class="content-grid mb-16">
+                        <div class="content-label"><svg class="section-label-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M0 0L14 14H0V0Z" /></svg>{{ t('demo.label') }}</div>
+                        <div class="content-body">
+                            <div class="mask-wrap"><h2 class="heading-l mb-6 mask-inner" v-html="t('demo.headingHtml')"></h2></div>
+                            <p class="paragraph-m max-w-2xl" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('demo.body') }}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <figure class="site-preview">
+                            <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'" :alt="t('demo.spacesAlt')" loading="lazy">
+                            <figcaption>{{ t('demo.spacesTitle') }}</figcaption>
+                        </figure>
+                        <figure class="site-preview">
+                            <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'" :alt="t('demo.generalAlt')" loading="lazy">
+                            <figcaption>{{ t('demo.generalTitle') }}</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="section-rk">
+                <div class="container">
+                    <div class="content-grid mb-16">
+                        <div class="content-label"><svg class="section-label-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M0 0L14 14H0V0Z" /></svg>{{ t('features.label') }}</div>
+                        <div class="content-body"><div class="mask-wrap"><h2 class="heading-l mask-inner" v-html="t('features.headingHtml')"></h2></div></div>
+                    </div>
+                    <div class="feature-grid">
+                        <article class="feature-card"><i data-lucide="sliders-horizontal" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.defaultTitle') }}</h3><p>{{ t('features.defaultBody') }}</p></article>
+                        <article class="feature-card"><i data-lucide="panels-top-left" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.spacesTitle') }}</h3><p>{{ t('features.spacesBody') }}</p></article>
+                        <article class="feature-card"><i data-lucide="sun-moon" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.appearanceTitle') }}</h3><p>{{ t('features.appearanceBody') }}</p></article>
+                        <article class="feature-card"><i data-lucide="hand" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.manualTitle') }}</h3><p>{{ t('features.manualBody') }}</p></article>
+                        <article class="feature-card"><i data-lucide="shield-check" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.protectionTitle') }}</h3><p>{{ t('features.protectionBody') }}</p></article>
+                        <article class="feature-card"><i data-lucide="waypoints" class="feature-card-icon" aria-hidden="true"></i><h3>{{ t('features.spaceAPITitle') }}</h3><p>{{ t('features.spaceAPIBody') }}</p></article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="more-features" class="section-rk">
+                <div class="container">
+                    <div class="content-grid mb-16">
+                        <div class="content-label">{{ t('moreFeatures.label') }}</div>
+                        <div class="content-body"><div class="mask-wrap"><h2 class="heading-l mask-inner" v-html="t('moreFeatures.headingHtml')"></h2></div></div>
+                    </div>
+                    <div class="content-grid mb-12"><div class="content-label">{{ t('moreFeatures.requirementLabel') }}</div><div class="content-body"><p class="paragraph-m max-w-2xl" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('moreFeatures.requirementBody') }}</p></div></div>
+                    <div class="content-grid mb-12"><div class="content-label">{{ t('moreFeatures.spaceAPILabel') }}</div><div class="content-body"><p class="paragraph-m max-w-2xl" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('moreFeatures.spaceAPIBody') }}</p><a href="https://desktoprenamer.mqiu.dev" target="_blank" rel="noopener" class="inline-block mt-4 font-semibold" style="color:var(--klein-blue-text)">DesktopRenamer →</a></div></div>
+                    <div class="content-grid mb-12"><div class="content-label">{{ t('moreFeatures.disconnectLabel') }}</div><div class="content-body"><p class="paragraph-m max-w-2xl" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('moreFeatures.disconnectBody') }}</p></div></div>
+                    <div class="content-grid"><div class="content-label">{{ t('moreFeatures.aerialLabel') }}</div><div class="content-body"><p class="paragraph-m max-w-2xl" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('moreFeatures.aerialBody') }}</p></div></div>
+                </div>
+            </section>
+
+            <section id="install" class="relative overflow-hidden" style="background:var(--klein-blue);color:var(--pure-white);padding:8rem 0">
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image:url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E&quot;);background-repeat:repeat;background-size:256px"></div>
+                <div class="container relative z-10">
+                    <div class="content-grid">
+                        <div class="content-label" style="color:rgba(255,255,255,.7)"><svg class="section-label-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M0 0L14 14H0V0Z" /></svg>{{ t('install.label') }}</div>
+                        <div class="content-body">
+                            <div class="mask-wrap"><h2 class="heading-l mb-8 mask-inner" style="color:var(--pure-white)" v-html="t('install.headingHtml')"></h2></div>
+                            <p class="paragraph-l max-w-2xl mb-8" style="color:rgba(255,255,255,.9)">{{ t('install.body') }}</p>
+                            <div class="flex flex-wrap gap-4 mb-8">
+                                <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" data-btn style="font-size:1.15rem;background:var(--pure-white);border-color:var(--pure-white)">
+                                    <div data-btn-bg style="background:var(--pure-white)"></div><div data-btn-inner :data-text="t('install.download')"><span data-btn-text style="color:var(--klein-blue)">{{ t('install.download') }}</span></div>
+                                </a>
+                                <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="self-center font-semibold" style="color:rgba(255,255,255,.9)">{{ t('quicknav.github') }} ↗</a>
+                            </div>
+                            <p class="install-note mb-5">{{ t('install.prerequisite') }}</p>
+                            <p class="max-w-3xl" style="font: .88rem/1.65 'Inter',sans-serif;color:rgba(255,255,255,.62)">{{ t('install.gatekeeper') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="companions" class="section-rk">
+                <div class="container">
+                    <div class="content-grid mb-20">
+                        <div class="content-label"><svg class="section-label-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M0 0L14 14H0V0Z" /></svg>{{ t('companions.label') }}</div>
+                        <div class="content-body"><div class="mask-wrap"><h2 class="heading-l mask-inner" v-html="t('companions.headingHtml')"></h2></div></div>
+                    </div>
+                    <div class="companion-series-label"><span class="suite-series">/ {{ t('companions.workflowSuite') }}</span></div>
+                    <div class="companions-grid grid grid-cols-1 md:grid-cols-2 gap-0" style="border-left:1px solid var(--border-color)">
+                        <article class="work-card" data-hover-follow style="border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)">
+                            <h3 class="heading-l text-4xl">{{ t('companions.desktoprenamerTitle') }}</h3><p class="paragraph-m max-w-sm" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('companions.desktoprenamerBody') }}</p>
+                            <div class="work-meta"><a href="https://desktoprenamer.mqiu.dev" target="_blank" rel="noopener" data-btn class="ml-auto"><div data-btn-bg></div><div data-btn-inner :data-text="t('companions.learnMore')"><span data-btn-text>{{ t('companions.learnMore') }}</span></div></a></div>
+                            <img src="resources/works/desktop-renamer.png" alt="" data-hover-follower class="card-subimg" loading="lazy">
+                        </article>
+                        <article class="work-card" data-hover-follow style="border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)">
+                            <h3 class="heading-l text-4xl">{{ t('companions.spaceswitcherTitle') }}</h3><p class="paragraph-m max-w-sm" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('companions.spaceswitcherBody') }}</p>
+                            <div class="work-meta"><a href="https://spaceswitcher.mqiu.dev" target="_blank" rel="noopener" data-btn class="ml-auto"><div data-btn-bg></div><div data-btn-inner :data-text="t('companions.learnMore')"><span data-btn-text>{{ t('companions.learnMore') }}</span></div></a></div>
+                            <img src="resources/works/space-switcher.png" alt="" data-hover-follower class="card-subimg" loading="lazy">
+                        </article>
+                        <article class="work-card" data-hover-follow style="border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)">
+                            <h3 class="heading-l text-4xl">{{ t('companions.optclickerTitle') }}</h3><p class="paragraph-m max-w-sm" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('companions.optclickerBody') }}</p>
+                            <div class="work-meta"><a href="https://optclicker.mqiu.dev" target="_blank" rel="noopener" data-btn class="ml-auto"><div data-btn-bg></div><div data-btn-inner :data-text="t('companions.learnMore')"><span data-btn-text>{{ t('companions.learnMore') }}</span></div></a></div>
+                            <img src="resources/works/opt-clicker.png" alt="" data-hover-follower class="card-subimg" loading="lazy">
+                        </article>
+                    </div>
+                    <div class="companion-series-label mt-12"><span class="suite-series">/ {{ t('companions.mediaSuite') }}</span></div>
+                    <div class="companions-grid grid grid-cols-1 md:grid-cols-2 gap-0" style="border-left:1px solid var(--border-color)">
+                        <article class="work-card" data-hover-follow style="border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)">
+                            <h3 class="heading-l text-4xl">{{ t('companions.vtplayerTitle') }}</h3><p class="paragraph-m max-w-sm" style="color:var(--text-primary);font-family:'Inter',sans-serif">{{ t('companions.vtplayerBody') }}</p>
+                            <div class="work-meta"><a href="https://vtplayer.mqiu.dev" target="_blank" rel="noopener" data-btn class="ml-auto"><div data-btn-bg></div><div data-btn-inner :data-text="t('companions.learnMore')"><span data-btn-text>{{ t('companions.learnMore') }}</span></div></a></div>
+                            <img src="resources/works/vtplayer-app-icon.png" alt="" data-hover-follower class="card-subimg" loading="lazy">
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="w-full bg-klein-blue text-white pt-16 pb-8" style="background-color:var(--klein-blue);color:var(--pure-white)">
+            <div class="container">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
+                    <div class="md:col-span-5">
+                        <a href="https://mqiu.dev" target="_blank" rel="noopener" class="inline-block mb-3" aria-label="Michael Qiu home">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1039.8 581.48" fill="white" style="width:2.5rem;height:auto" aria-hidden="true"><path fill-rule="evenodd" d="M634.68,10c0-5.5-2.48-6.24-5.51-1.65l-244.88,370.96c-3.03,4.59-5.51,12.85-5.51,18.35v173.83c0,5.5,4.5,10,10,10h235.9c5.5,0,10-4.5,10-10V10Z" /><path fill-rule="evenodd" d="M379.26,10c0-5.5-2.48-6.24-5.5-1.65L1.41,573.13c-3.03,4.59-1,8.35,4.5,8.35H241.47c5.5,0,12.48-3.76,15.5-8.35l116.77-177.13c3.03-4.59,5.5-12.85,5.5-18.35V10Z" /><path d="M1033.98,581.48c5.5,0,7.45-3.71,4.34-8.25l-237.54-346.18c-3.11-4.54-10.16-8.25-15.66-8.25h-109.7c-5.5,0-10,4.5-10,10v342.67c0,5.5,4.5,10,10,10h358.56Z" /><path d="M790.05,211.64c2.79,4.74,7.36,4.74,10.15,0L919.75,8.62C922.54,3.88,920.32,0,914.82,0h-239.41c-5.5,0-7.72,3.88-4.93,8.62l119.55,203.03Z" /></svg>
+                        </a>
+                        <p class="text-xs text-white/70" style="font-family:'Inter',sans-serif">{{ t('footer.copyright') }}</p>
+                    </div>
+                    <div class="md:col-span-2"><p class="footer-nav-label mb-2">{{ t('quicknav.page') }}</p><div class="flex flex-col gap-1"><a v-for="link in pageLinks" :key="link.id" @click.prevent="handleNavClick(link.id)" :href="'#' + link.id" class="footer-nav-link">{{ t(link.key) }}</a></div></div>
+                    <div class="md:col-span-2"><p class="footer-nav-label mb-2">{{ t('quicknav.links') }}</p><div class="flex flex-col gap-1"><a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.github') }}</a><a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.releases') }}</a><a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.issues') }}</a><a href="https://mqiu.dev" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.website') }}</a></div></div>
+                    <div class="md:col-span-3"><p class="footer-nav-label mb-2">{{ t('quicknav.more') }} <span class="suite-series">/ {{ t('quicknav.workflowSuite') }}</span></p><div class="flex flex-col gap-1"><a href="https://desktoprenamer.mqiu.dev" target="_blank" rel="noopener" class="footer-nav-link">DesktopRenamer</a><a href="https://spaceswitcher.mqiu.dev" target="_blank" rel="noopener" class="footer-nav-link">SpaceSwitcher</a><a href="https://optclicker.mqiu.dev" target="_blank" rel="noopener" class="footer-nav-link">OptClicker</a><a href="https://vtplayer.mqiu.dev" target="_blank" rel="noopener" class="footer-nav-link">VTPlayer</a></div></div>
+                </div>
+                <div class="border-t border-white/10 pt-8 mt-8"><div class="text-[clamp(2.5rem,8vw,10rem)] font-black tracking-tighter leading-none">{{ t('footer.brand') }}</div></div>
+            </div>
+        </footer>
+
+        <transition name="fade">
+            <aside v-if="isSidebarOpen" class="fixed inset-0 sidebar-rk z-[10001] flex flex-col" aria-label="Mobile navigation">
+                <div class="container flex-1 flex flex-col justify-center">
+                    <div class="flex flex-col" style="gap:1rem">
+                        <a v-for="link in pageLinks" :key="link.id" :href="'#' + link.id" @click.prevent="handleNavClick(link.id)" class="sidebar-link"><div class="mask-wrap"><span class="mask-inner">{{ t(link.key) }}</span></div></a>
+                        <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="sidebar-link"><div class="mask-wrap"><span class="mask-inner">{{ t('sidebar.github') }}<i data-lucide="arrow-up-right" class="sidebar-ext-icon"></i></span></div></a>
+                        <div class="hero__quicknav-lang mt-6"><button @click="setLang('en')" class="hero__quicknav-lang-btn" :class="{ 'is-active': lang === 'en' }">EN</button><span class="hero__quicknav-lang-sep">/</span><button @click="setLang('zh')" class="hero__quicknav-lang-btn" :class="{ 'is-active': lang === 'zh' }">中文</button></div>
+                    </div>
+                </div>
+            </aside>
+        </transition>
+    </div>
+
+    <script src="scripts/i18n.js"></script>
+    <script>
+        (function () {
+            var ref = Vue.ref, computed = Vue.computed, watch = Vue.watch, onMounted = Vue.onMounted;
+            var translation = window.i18n;
+            function storedValue(key) { try { return localStorage.getItem(key); } catch (error) { return null; } }
+            function cookieValue(key) {
+                try {
+                    var match = document.cookie.match(new RegExp('(?:^|; )' + key + '=([^;]*)'));
+                    return match ? decodeURIComponent(match[1]) : null;
+                } catch (error) { return null; }
+            }
+            function saveValue(key, value) {
+                try { if (value) localStorage.setItem(key, value); else localStorage.removeItem(key); } catch (error) {}
+                try { document.cookie = key + '=' + encodeURIComponent(value || '') + ';path=/;domain=mqiu.dev;max-age=' + (value ? '31536000' : '0') + ';SameSite=Lax'; } catch (error) {}
+            }
+            var systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+            Vue.createApp({
+                setup: function () {
+                    var savedLanguage = storedValue('lang') || cookieValue('lang');
+                    var initialLanguage = savedLanguage === 'zh' || savedLanguage === 'en' ? savedLanguage : (navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en');
+                    var lang = ref(initialLanguage);
+                    var savedTheme = storedValue('theme') || cookieValue('theme');
+                    var themeMode = ref(savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system');
+                    var isDark = ref(themeMode.value === 'dark' || (themeMode.value === 'system' && systemTheme.matches));
+                    var isSidebarOpen = ref(false);
+                    var showNavDock = ref(false);
+                    var activeSection = ref('home');
+                    var navDockBottom = ref('2rem');
+                    var lenis = null;
+                    var intersectionObserver = null;
+                    var pageLinks = [
+                        { id: 'overview', key: 'quicknav.overview' }, { id: 'demo', key: 'quicknav.demo' },
+                        { id: 'features', key: 'quicknav.features' }, { id: 'more-features', key: 'quicknav.requirements' },
+                        { id: 'install', key: 'quicknav.install' }, { id: 'companions', key: 'quicknav.apps' }
+                    ];
+
+                    function t(key) {
+                        var value = key.split('.').reduce(function (item, part) { return item == null ? null : item[part]; }, translation[lang.value]);
+                        return value == null ? key : value;
+                    }
+                    var sectionLabels = computed(function () { return translation[lang.value].sectionLabels; });
+                    function applyTheme() { document.documentElement.classList.toggle('dark', isDark.value); }
+                    function setLang(value) {
+                        if (value !== 'en' && value !== 'zh') return;
+                        lang.value = value;
+                        saveValue('lang', value);
+                    }
+                    function toggleTheme() {
+                        if (themeMode.value === 'system') { themeMode.value = 'light'; isDark.value = false; }
+                        else if (themeMode.value === 'light') { themeMode.value = 'dark'; isDark.value = true; }
+                        else { themeMode.value = 'system'; isDark.value = systemTheme.matches; }
+                        saveValue('theme', themeMode.value === 'system' ? null : themeMode.value);
+                        applyTheme();
+                        nextTickIcons();
+                    }
+                    function nextTickIcons() { Vue.nextTick(function () { if (window.lucide) lucide.createIcons(); }); }
+                    function closeSidebar() { isSidebarOpen.value = false; }
+                    function toggleSidebar() { isSidebarOpen.value = !isSidebarOpen.value; nextTickIcons(); }
+                    function handleNavClick(id) {
+                        closeSidebar();
+                        var section = document.getElementById(id);
+                        if (!section) return;
+                        if (lenis) lenis.scrollTo(section, { duration: 1.1 });
+                        else section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    function scrollToTop() {
+                        if (lenis) lenis.scrollTo(0, { duration: 1.1 });
+                        else window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                    function onScroll() {
+                        showNavDock.value = window.scrollY > window.innerHeight * 0.2;
+                        var footer = document.querySelector('footer');
+                        if (footer && footer.getBoundingClientRect().top < window.innerHeight) {
+                            navDockBottom.value = (window.innerHeight - footer.getBoundingClientRect().top + 16) + 'px';
+                        } else navDockBottom.value = '2rem';
+                    }
+                    watch(lang, function (value) { document.documentElement.lang = value; document.title = t('site.title'); }, { immediate: true });
+                    watch(isDark, applyTheme);
+                    applyTheme();
+
+                    onMounted(function () {
+                        if (window.Lenis) {
+                            lenis = new Lenis({ duration: 1.25, easing: function (x) { return Math.min(1, 1.001 - Math.pow(2, -10 * x)); }, smoothWheel: true });
+                            function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+                            requestAnimationFrame(raf);
+                        }
+                        if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+                        if (window.initParticles) {
+                            var particleField = initParticles('particle-layer');
+                            if (particleField && particleField.state && window.gsap) gsap.to(particleField.state, { progress: 1, duration: 2.6, ease: 'power2.out' });
+                        }
+                        if (window.lucide) lucide.createIcons();
+                        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                            document.querySelectorAll('[data-hover-follow]').forEach(function (card) {
+                                var follower = card.querySelector('[data-hover-follower]');
+                                if (!follower) return;
+
+                                var x = 0, y = 0, targetX = 0, targetY = 0;
+                                var frame = 0;
+                                var lastEvent = null;
+
+                                function setTarget(event) {
+                                    var rect = card.getBoundingClientRect();
+                                    targetX = event.clientX - rect.left + 16;
+                                    targetY = event.clientY - rect.top + 16;
+                                }
+
+                                function tick() {
+                                    if (!lastEvent) {
+                                        frame = 0;
+                                        return;
+                                    }
+                                    setTarget(lastEvent);
+                                    x += (targetX - x) * 0.16;
+                                    y += (targetY - y) * 0.16;
+                                    follower.style.left = Math.round(x) + 'px';
+                                    follower.style.top = Math.round(y) + 'px';
+                                    frame = requestAnimationFrame(tick);
+                                }
+
+                                card.addEventListener('mouseenter', function (event) {
+                                    card.style.zIndex = '9999';
+                                    lastEvent = event;
+                                    setTarget(event);
+                                    x = targetX;
+                                    y = targetY;
+                                    follower.style.left = Math.round(x) + 'px';
+                                    follower.style.top = Math.round(y) + 'px';
+                                    follower.style.display = 'block';
+                                    if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                        gsap.fromTo(follower, { scale: 0.6 }, { scale: 1, duration: 0.45, ease: 'elastic.out(1,0.5)', overwrite: true });
+                                    }
+                                    if (!frame) frame = requestAnimationFrame(tick);
+                                });
+                                card.addEventListener('mousemove', function (event) {
+                                    lastEvent = event;
+                                    setTarget(event);
+                                });
+                                card.addEventListener('mouseleave', function () {
+                                    lastEvent = null;
+                                    if (frame) cancelAnimationFrame(frame);
+                                    frame = 0;
+                                    if (window.gsap) gsap.killTweensOf(follower);
+                                    follower.style.display = 'none';
+                                    card.style.zIndex = '';
+                                });
+                            });
+                        }
+                        window.addEventListener('scroll', onScroll, { passive: true });
+                        systemTheme.addEventListener('change', function (event) { if (themeMode.value === 'system') isDark.value = event.matches; });
+                        intersectionObserver = new IntersectionObserver(function (entries) {
+                            entries.forEach(function (entry) { if (entry.isIntersecting) activeSection.value = entry.target.id; });
+                        }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+                        ['home', 'overview', 'demo', 'features', 'more-features', 'install', 'companions'].forEach(function (id) {
+                            var element = document.getElementById(id); if (element) intersectionObserver.observe(element);
+                        });
+                        onScroll();
+                        window.addEventListener('load', function () { if (window.ScrollTrigger) ScrollTrigger.refresh(); });
+                        var preloader = document.getElementById('preloader');
+                        document.documentElement.classList.add('preloader-complete');
+                        if (preloader) { preloader.style.opacity = '0'; setTimeout(function () { preloader.remove(); }, 520); }
+                        if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                            gsap.from('.hero__icon-3d', { scale: 0.92, opacity: 0, y: 24, duration: 0.9, ease: 'power3.out', delay: 0.1 });
+                            gsap.from('.hero__text .mask-inner', { y: '110%', opacity: 0, duration: 0.85, stagger: 0.12, ease: 'expo.out', delay: 0.25 });
+                            gsap.utils.toArray('.feature-card, .site-preview').forEach(function (element) {
+                                gsap.from(element, { y: 24, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 90%' } });
+                            });
+                        }
+                    });
+
+                    return {
+                        lang: lang, isDark: isDark, themeMode: themeMode, isSidebarOpen: isSidebarOpen,
+                        showNavDock: showNavDock, activeSection: activeSection, navDockBottom: navDockBottom,
+                        sectionLabels: sectionLabels, pageLinks: pageLinks, t: t, setLang: setLang,
+                        toggleTheme: toggleTheme, toggleSidebar: toggleSidebar,
+                        handleNavClick: handleNavClick, scrollToTop: scrollToTop
+                    };
+                }
+            }).mount('#app');
+        })();
+
+        window.addEventListener('load', function () {
+            if (window.ScrollTrigger) ScrollTrigger.refresh();
+        });
+    </script>
+</body>
+</html>
