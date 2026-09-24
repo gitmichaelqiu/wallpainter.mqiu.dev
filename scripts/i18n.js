@@ -25,7 +25,7 @@ window.i18n = {
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
             apiBody: 'Per-space automation requires DesktopRenamer SpaceAPI. If it disconnects, WallPainter pauses space-aware changes. Optional disconnect alerts are in Permissions.',
-            docs: 'DesktopRenamer',
+            docs: 'SpaceAPI Guide',
             protectionLabel: 'Wallpaper protection',
             protectionBody: 'Optional protection backs up mapped Aerials and tries to restore them if macOS removes them. Restoration is best-effort.'
         },
@@ -78,7 +78,7 @@ window.i18n = {
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
             apiBody: '按桌面自动切换需要 DesktopRenamer SpaceAPI。连接中断时，WallPainter 会暂停桌面相关更改。可在“权限”中选择开启断连通知。',
-            docs: 'DesktopRenamer',
+            docs: 'SpaceAPI 指南',
             protectionLabel: '壁纸保护',
             protectionBody: '启用后，WallPainter 会备份已映射的航拍壁纸，并在 macOS 移除资源时尝试恢复。恢复能力仅为尽力而为。'
         },
