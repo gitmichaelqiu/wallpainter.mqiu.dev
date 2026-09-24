@@ -4,8 +4,8 @@ window.i18n = {
         hero: { heading: 'WallPainter', tagline: 'Aerial wallpapers, set to your spaces.' },
         quicknav: {
             page: 'Page', links: 'Links', more: 'More Apps', workflowSuite: 'Workflow', mediaSuite: 'Media',
-            overview: 'Overview', demo: 'Screenshots', features: 'Features', install: 'Install', docs: 'Details',
-            github: 'GitHub', releases: 'Releases', raycast: 'Report an Issue', portfolio: 'mqiu.dev',
+            overview: 'Overview', features: 'Features', install: 'Install',
+            github: 'GitHub', releases: 'Releases', issues: 'Report an Issue', portfolio: 'mqiu.dev',
             blog: 'Blog', desktoprenamer: 'DesktopRenamer', optclicker: 'OptClicker', spaceswitcher: 'SpaceSwitcher'
         },
         overview: {
@@ -13,23 +13,14 @@ window.i18n = {
             headingHtml: 'A different atmosphere for every <span class="text-editorial gradient-text">space.</span>',
             body: 'WallPainter is a macOS menu bar app for Apple Aerial wallpapers. Set a Default rule for spaces without their own behavior, then add per-space rules where you want something different. Choose Manual, a fixed wallpaper, or follow Light and Dark appearance.'
         },
-        demo: { label: 'Screenshots', screenshotAlt: 'WallPainter General settings showing installed Aerial wallpapers and wallpaper protection.' },
         features: {
             label: 'Features', headingHtml: 'One default. Override only when it <span class="text-editorial gradient-text">matters.</span>',
-            slide1num: '01 / Default', slide1title: 'Set a <span class="text-editorial gradient-text">default behavior</span>',
-            slide1body: 'Choose Manual, Fixed wallpaper, or Follow system appearance. Spaces without an individual rule inherit the Default behavior.',
-            slide2num: '02 / Spaces', slide2title: 'Choose behavior <span class="text-editorial gradient-text">space by space</span>',
-            slide2body: 'Each space can use Default, stay Manual, use one fixed Aerial, or follow appearance with its own Light and Dark selections.',
-            slide2imageAlt: 'WallPainter Spaces settings showing the available per-space behavior choices and wallpaper previews.',
-            slide3num: '03 / Appearance', slide3title: 'Match macOS <span class="text-editorial gradient-text">Light and Dark</span>',
-            slide3body: 'Choose a wallpaper for each appearance. When macOS changes appearance, WallPainter selects the matching image for each space-aware rule.',
-            slide4num: '04 / Manual', slide4title: 'Keep wallpaper changes <span class="text-editorial gradient-text">in your hands</span>',
-            slide4body: 'Manual rules are never changed automatically. Choose any installed Aerial and apply it to the current space or everywhere.',
-            slide5num: '05 / Protection', slide5title: 'Protect your <span class="text-editorial gradient-text">mapped Aerials</span>',
-            slide5body: 'Optional protection backs up only wallpapers used by your rules or current manual selection, then attempts to restore missing assets before automation.',
-            slide6num: '06 / SpaceAPI', slide6title: 'Pause safely when a space is <span class="text-editorial gradient-text">unavailable</span>',
-            slide6body: 'Per-space automation uses DesktopRenamer SpaceAPI. If the connection drops, WallPainter pauses space-aware changes rather than writing to the wrong desktop.',
-            slide6btn: 'DesktopRenamer'
+            slide1num: '01 / Spaces', slide1title: 'Choose behavior <span class="text-editorial gradient-text">space by space</span>',
+            slide1body: 'Each space can inherit the Default rule, stay Manual, use a fixed Aerial, or follow system appearance with its own Light and Dark wallpapers.',
+            slide1imageAlt: 'WallPainter Spaces settings showing per-space wallpaper behavior and Light and Dark previews.',
+            slide2num: '02 / Wallpapers', slide2title: 'Browse and apply <span class="text-editorial gradient-text">Apple Aerials</span>',
+            slide2body: 'Browse installed Aerials, then apply a wallpaper to the current space or every space.',
+            slide2imageAlt: 'WallPainter General settings showing the installed Aerial wallpaper collection and apply actions.'
         },
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
@@ -41,7 +32,7 @@ window.i18n = {
         install: {
             label: 'Install', headingHtml: 'Find the right view for every <span class="text-editorial" style="color: var(--gold-light); font-style: italic;">space.</span>',
             body: 'Requires macOS 15 Sequoia or later. Download WallPainter from GitHub Releases, move it to Applications, and open it.',
-            download: 'Download', or: 'or', copy: 'View on GitHub',
+            download: 'Download',
             disclaimer: '<strong>Per-space automation requires DesktopRenamer with SpaceAPI enabled.</strong> WallPainter is distributed outside the Mac App Store and may show a first-open security warning. If macOS blocks it, use System Settings → Privacy &amp; Security → Open Anyway. Never disable SIP.'
         },
         companions: {
@@ -58,16 +49,16 @@ window.i18n = {
             learnMore: 'Learn More'
         },
         footer: { copyright: '© 2026 - Michael Qiu.', brand: 'WallPainter.' },
-        sidebar: { home: 'Home', overview: 'Overview', demo: 'Screenshots', features: 'Features', install: 'Install', companions: 'More Apps', github: 'GitHub' },
-        sectionLabels: { home: 'Home', overview: 'Overview', demo: 'Screenshots', features: 'Features', 'more-features': 'Details', install: 'Install', companions: 'More Apps' }
+        sidebar: { home: 'Home', overview: 'Overview', features: 'Features', install: 'Install', companions: 'More Apps', github: 'GitHub' },
+        sectionLabels: { home: 'Home', overview: 'Overview', features: 'Features', 'more-features': 'Features', install: 'Install', companions: 'More Apps' }
     },
     zh: {
         site: { title: 'WallPainter — 为每个桌面设置航拍壁纸' },
         hero: { heading: 'WallPainter', tagline: '为每个桌面，搭配专属航拍壁纸。' },
         quicknav: {
             page: '页面', links: '链接', more: '更多应用', workflowSuite: '工作流', mediaSuite: '媒体',
-            overview: '概览', demo: '截图', features: '功能', install: '安装', docs: '详细信息',
-            github: 'GitHub', releases: '版本发布', raycast: '报告问题', portfolio: 'mqiu.dev',
+            overview: '概览', features: '功能', install: '安装',
+            github: 'GitHub', releases: '版本发布', issues: '报告问题', portfolio: 'mqiu.dev',
             blog: '博客', desktoprenamer: 'DesktopRenamer', optclicker: 'OptClicker', spaceswitcher: 'SpaceSwitcher'
         },
         overview: {
@@ -75,23 +66,14 @@ window.i18n = {
             headingHtml: '为每个<span class="text-editorial gradient-text">桌面</span>营造不同氛围。',
             body: 'WallPainter 是一款用于 Apple 航拍壁纸的 macOS 菜单栏应用。先为没有单独规则的桌面设置默认行为，再按需为个别桌面添加规则。可选择手动、固定壁纸，或跟随明暗外观。'
         },
-        demo: { label: '截图', screenshotAlt: 'WallPainter 的“通用”设置，展示已安装的航拍壁纸及壁纸保护。' },
         features: {
             label: '功能', headingHtml: '设置一个默认规则，只在需要时<span class="text-editorial gradient-text">单独调整。</span>',
-            slide1num: '01 / 默认规则', slide1title: '设定<span class="text-editorial gradient-text">默认行为</span>',
-            slide1body: '可选手动、固定壁纸或跟随系统外观。没有单独规则的桌面会继承默认行为。',
-            slide2num: '02 / 桌面规则', slide2title: '为每个桌面<span class="text-editorial gradient-text">分别选择</span>',
-            slide2body: '每个桌面都可以使用默认规则、保持手动、使用固定航拍壁纸，或设置自己的明暗壁纸。',
-            slide2imageAlt: 'WallPainter 的“桌面”设置，展示可用的按桌面行为选项和壁纸预览。',
-            slide3num: '03 / 明暗外观', slide3title: '匹配 macOS <span class="text-editorial gradient-text">明暗外观</span>',
-            slide3body: '为每种外观选择壁纸。macOS 外观改变时，WallPainter 会为每个可识别的桌面选择对应图片。',
-            slide4num: '04 / 手动控制', slide4title: '壁纸更改<span class="text-editorial gradient-text">由你掌控</span>',
-            slide4body: '手动规则不会自动更改壁纸。你仍可选择已安装的航拍壁纸，并应用到当前桌面或所有桌面。',
-            slide5num: '05 / 壁纸保护', slide5title: '保护<span class="text-editorial gradient-text">已映射的航拍壁纸</span>',
-            slide5body: '启用可选保护后，应用只备份规则或当前手动选择所引用的壁纸，并尝试在自动切换前恢复缺失资源。',
-            slide6num: '06 / SpaceAPI', slide6title: '桌面信息不可用时<span class="text-editorial gradient-text">安全暂停</span>',
-            slide6body: '按桌面自动切换需要 DesktopRenamer SpaceAPI。连接中断时，WallPainter 会暂停桌面相关更改，避免误改其他桌面。',
-            slide6btn: 'DesktopRenamer'
+            slide1num: '01 / 桌面规则', slide1title: '为每个桌面<span class="text-editorial gradient-text">分别选择</span>',
+            slide1body: '每个桌面都可以继承默认规则、保持手动、使用固定航拍壁纸，或跟随系统外观并设置自己的明暗壁纸。',
+            slide1imageAlt: 'WallPainter 的“桌面”设置，展示按桌面行为选项和明暗壁纸预览。',
+            slide2num: '02 / 航拍壁纸', slide2title: '浏览并应用<span class="text-editorial gradient-text">Apple 航拍壁纸</span>',
+            slide2body: '浏览已安装的航拍壁纸，并将其应用到当前桌面或所有桌面。',
+            slide2imageAlt: 'WallPainter 的“通用”设置，展示已安装的航拍壁纸及应用选项。'
         },
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
@@ -103,7 +85,7 @@ window.i18n = {
         install: {
             label: '安装', headingHtml: '为每个<span class="text-editorial" style="color: var(--gold-light); font-style: italic;">桌面</span>找到合适风景。',
             body: '需要 macOS 15 Sequoia 或更高版本。从 GitHub Releases 下载 WallPainter，移至“应用程序”文件夹后打开。',
-            download: '下载', or: '或', copy: '查看 GitHub',
+            download: '下载',
             disclaimer: '<strong>按桌面自动切换需要启用 DesktopRenamer SpaceAPI。</strong>WallPainter 在 Mac App Store 之外分发，首次打开时 macOS 可能显示安全提示。如被阻止，请前往“系统设置 → 隐私与安全性 → 仍要打开”。请勿关闭 SIP。'
         },
         companions: {
@@ -120,7 +102,7 @@ window.i18n = {
             learnMore: '了解更多'
         },
         footer: { copyright: '© 2026 - Michael Qiu.', brand: 'WallPainter.' },
-        sidebar: { home: '首页', overview: '概览', demo: '截图', features: '功能', install: '安装', companions: '更多应用', github: 'GitHub' },
-        sectionLabels: { home: '首页', overview: '概览', demo: '截图', features: '功能', 'more-features': '详细信息', install: '安装', companions: '更多应用' }
+        sidebar: { home: '首页', overview: '概览', features: '功能', install: '安装', companions: '更多应用', github: 'GitHub' },
+        sectionLabels: { home: '首页', overview: '概览', features: '功能', 'more-features': '功能', install: '安装', companions: '更多应用' }
     }
 };

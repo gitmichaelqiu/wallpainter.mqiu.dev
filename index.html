@@ -357,16 +357,14 @@
                         <div class="hero__quicknav-col">
                 <div class="hero__quicknav-label">{{ t('quicknav.page') }}</div>
                             <a @click.prevent="handleNavClick('overview')" href="#overview" class="hero__quicknav-link">{{ t('quicknav.overview') }}</a>
-                            <a @click.prevent="handleNavClick('demo')" href="#demo" class="hero__quicknav-link">{{ t('quicknav.demo') }}</a>
                             <a @click.prevent="handleNavClick('features')" href="#features" class="hero__quicknav-link">{{ t('quicknav.features') }}</a>
                             <a @click.prevent="handleNavClick('install')" href="#install" class="hero__quicknav-link">{{ t('quicknav.install') }}</a>
-                            <a @click.prevent="handleNavClick('more-features')" href="#more-features" class="hero__quicknav-link">{{ t('quicknav.docs') }}</a>
                         </div>
                         <div class="hero__quicknav-col">
                             <div class="hero__quicknav-label">{{ t('quicknav.links') }}</div>
                             <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="hero__quicknav-link">GitHub</a>
                             <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.releases') }}</a>
-                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.raycast') }}</a>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.issues') }}</a>
                             <a href="https://mqiu.dev" class="hero__quicknav-link">{{ t('quicknav.portfolio') }}</a>
                             <a href="https://mqiu.dev/blog" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.blog') }}</a>
                         </div>
@@ -425,14 +423,6 @@
                 </div>
             </section>
 
-            <!-- Settings Screenshot -->
-            <section id="demo" class="relative w-full" style="border-top: none;">
-                <div class="relative w-full overflow-hidden bg-deep-navy flex items-center justify-center" style="height: min(88vh, 80vw);">
-                    <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'"
-                        :alt="t('demo.screenshotAlt')" class="h-full w-auto max-w-full object-contain">
-                </div>
-            </section>
-
             <!-- Features Section — sticky slide gallery -->
             <section id="features" class="section-rk">
                 <div class="container">
@@ -450,9 +440,9 @@
                     </div>
                 </div>
 
-                <!-- Sticky slide stack: 6 features -->
-                <div class="feature-gallery" style="height: 420vh; position: relative; overflow: hidden;">
-                    <!-- Slide 1: Default behavior — text left, feature icon right -->
+                <!-- Sticky slide stack: 2 features -->
+                <div class="feature-gallery" style="height: 140vh; position: relative; overflow: hidden;">
+                    <!-- Slide 1: Space behavior — text left, screenshot right -->
                     <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
                         <div class="container" style="width: 100%;">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
@@ -462,21 +452,20 @@
                                     <p class="text-lg" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide1body') }}</p>
                                 </div>
                                 <div class="md:col-span-7">
-                                    <div class="w-full rounded-lg flex items-center justify-center" aria-hidden="true"
-                                        style="aspect-ratio: 16/9; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <i data-lucide="sliders-horizontal" class="w-20 h-20" style="color: var(--klein-blue-text);"></i>
-                                    </div>
+                                    <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'"
+                                        :alt="t('features.slide1imageAlt')"
+                                        class="w-full rounded-lg" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Slide 2: Space behavior — media left, text right -->
+                    <!-- Slide 2: Wallpaper library — screenshot left, text right -->
                     <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
                         <div class="container" style="width: 100%;">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
                                 <div class="md:col-span-7">
-                                    <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'"
+                                    <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'"
                                         :alt="t('features.slide2imageAlt')"
                                         class="w-full rounded-lg" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                                 </div>
@@ -484,88 +473,6 @@
                                     <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide2num') }}</p>
                                     <h3 class="heading-l mb-4" v-html="t('features.slide2title')"></h3>
                                     <p class="text-lg" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide2body') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 3: Appearance — text left, feature icon right -->
-                    <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
-                        <div class="container" style="width: 100%;">
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
-                                <div class="md:col-span-5 md:pr-16">
-                                    <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide3num') }}</p>
-                                    <h3 class="heading-l mb-4" v-html="t('features.slide3title')"></h3>
-                                    <p class="text-lg" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide3body') }}</p>
-                                </div>
-                                <div class="md:col-span-7">
-                                    <div class="w-full rounded-lg flex items-center justify-center" aria-hidden="true"
-                                        style="aspect-ratio: 16/9; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <i data-lucide="sun-moon" class="w-20 h-20" style="color: var(--klein-blue-text);"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 4: Manual application — media left, text right -->
-                    <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
-                        <div class="container" style="width: 100%;">
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
-                                <div class="md:col-span-7">
-                                    <div class="w-full rounded-lg flex items-center justify-center" aria-hidden="true"
-                                        style="aspect-ratio: 16/9; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <i data-lucide="mouse-pointer-click" class="w-20 h-20" style="color: var(--klein-blue-text);"></i>
-                                    </div>
-                                </div>
-                                <div class="md:col-span-5 md:pl-16">
-                                    <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide4num') }}</p>
-                                    <h3 class="heading-l mb-4" v-html="t('features.slide4title')"></h3>
-                                    <p class="text-lg" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide4body') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 5: Wallpaper protection — text left, screenshot right -->
-                    <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
-                        <div class="container" style="width: 100%;">
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
-                                <div class="md:col-span-5 md:pr-16">
-                                    <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide5num') }}</p>
-                                    <h3 class="heading-l mb-4" v-html="t('features.slide5title')"></h3>
-                                    <p class="text-lg mb-6" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide5body') }}</p>
-                                </div>
-                                <div class="md:col-span-7">
-                                    <div class="w-full rounded-lg flex items-center justify-center" aria-hidden="true"
-                                        style="aspect-ratio: 16/9; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <i data-lucide="shield-check" class="w-20 h-20" style="color: var(--klein-blue-text);"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 6: SpaceAPI — media left, text right -->
-                    <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
-                        <div class="container" style="width: 100%;">
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
-                                <div class="md:col-span-7">
-                                    <div class="w-full rounded-lg flex items-center justify-center" aria-hidden="true"
-                                        style="aspect-ratio: 16/9; background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <i data-lucide="link-2" class="w-20 h-20" style="color: var(--klein-blue-text);"></i>
-                                    </div>
-                                </div>
-                                <div class="md:col-span-5 md:pl-16">
-                                    <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide6num') }}</p>
-                                    <h3 class="heading-l mb-4" v-html="t('features.slide6title')"></h3>
-                                    <p class="text-lg mb-6" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide6body') }}</p>
-                                    <a href="https://desktoprenamer.mqiu.dev" target="_blank" rel="noopener" data-btn style="font-size: 1.2rem; letter-spacing: 0em;">
-                                        <div data-btn-bg></div>
-                                        <div data-btn-inner :data-text="t('features.slide6btn')">
-                                            <span data-btn-text>{{ t('features.slide6btn') }}</span>
-                                        </div>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -629,8 +536,6 @@
                                         <span data-btn-text style="color: var(--klein-blue);">{{ t('install.download') }}</span>
                                     </div>
                                 </a>
-                                <span class="self-center" style="font-size: 1.1rem; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; font-weight: 400;">{{ t('install.or') }}</span>
-                                <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="self-center" style="font-size: 1.1rem; color: rgba(255,255,255,0.9); font-family: 'Inter', sans-serif; font-weight: 500;">{{ t('install.copy') }} ↗</a>
                             </div>
                             <p style="font-size: 0.85rem; letter-spacing: -0.02em; color: rgba(255,255,255,0.6); max-width: 36rem;" v-html="t('install.disclaimer')">
                             </p>
@@ -753,10 +658,8 @@
                         <p class="footer-nav-label" style="margin-bottom:0.35rem;">{{ t('quicknav.page') }}</p>
                         <div class="flex flex-col gap-1">
                             <a @click.prevent="handleNavClick('overview')" href="#overview" class="footer-nav-link">{{ t('quicknav.overview') }}</a>
-                            <a @click.prevent="handleNavClick('demo')" href="#demo" class="footer-nav-link">{{ t('quicknav.demo') }}</a>
                             <a @click.prevent="handleNavClick('features')" href="#features" class="footer-nav-link">{{ t('quicknav.features') }}</a>
                             <a @click.prevent="handleNavClick('install')" href="#install" class="footer-nav-link">{{ t('quicknav.install') }}</a>
-                            <a @click.prevent="handleNavClick('more-features')" href="#more-features" class="footer-nav-link">{{ t('quicknav.docs') }}</a>
                         </div>
                     </div>
                     <div class="md:col-span-2">
@@ -764,7 +667,7 @@
                         <div class="flex flex-col gap-1">
                             <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.github') }}</a>
                             <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.releases') }}</a>
-                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.raycast') }}</a>
+                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.issues') }}</a>
                             <a href="https://mqiu.dev" class="footer-nav-link">{{ t('quicknav.portfolio') }}</a>
                             <a href="https://mqiu.dev/blog" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.blog') }}</a>
                         </div>
@@ -1004,7 +907,6 @@
                         return [
                             { id: 'home', label: t('sidebar.home') },
                             { id: 'overview', label: t('sidebar.overview') },
-                            { id: 'demo', label: t('sidebar.demo') },
                             { id: 'features', label: t('sidebar.features') },
                             { id: 'install', label: t('sidebar.install') },
                             { id: 'companions', label: t('sidebar.companions') }
@@ -1265,7 +1167,7 @@
                     // ── Section Label Animation ──
                     var sectionLabelTween;
                     var sectionLabelClone;
-                    var sectionOrder = ['home', 'overview', 'demo', 'features', 'more-features', 'install', 'companions'];
+                    var sectionOrder = ['home', 'overview', 'features', 'more-features', 'install', 'companions'];
 
                     watch(activeSection, function (newSection, oldSection) {
                         if (!oldSection || oldSection === newSection) return;
@@ -1348,7 +1250,7 @@
                         scrollRafPending = false;
                         var winHeight = window.innerHeight;
                         showNavDock.value = window.scrollY > winHeight * 0.2;
-                        var sections = ['home', 'overview', 'demo', 'features', 'more-features', 'install', 'companions'];
+                        var sections = ['home', 'overview', 'features', 'more-features', 'install', 'companions'];
                         var current = 'home';
                         sections.forEach(function (id) {
                             var el = document.getElementById(id);
