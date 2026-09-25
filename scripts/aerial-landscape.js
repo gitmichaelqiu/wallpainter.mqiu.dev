@@ -48,27 +48,6 @@
             };
         }
 
-        function drawAtmosphere(time) {
-            var dayCycle = time * 0.00008;
-            var sunX = width * (0.5 + Math.sin(dayCycle) * 0.32);
-            var sunY = height * (0.43 + Math.sin(dayCycle * 0.62 + 1.1) * 0.1);
-            var radius = Math.max(width, height) * 0.78;
-            var sunrise = context.createRadialGradient(sunX, sunY, 0, sunX, sunY, radius);
-            sunrise.addColorStop(0, 'rgba(255,190,130,0.105)');
-            sunrise.addColorStop(0.34, 'rgba(255,163,117,0.045)');
-            sunrise.addColorStop(1, 'rgba(255,150,110,0)');
-            context.fillStyle = sunrise;
-            context.fillRect(0, 0, width, height);
-
-            var coolX = width - sunX * 0.72;
-            var cool = context.createRadialGradient(coolX, height * 0.57, 0, coolX, height * 0.57, radius * 0.84);
-            cool.addColorStop(0, 'rgba(80,174,255,0.09)');
-            cool.addColorStop(0.5, 'rgba(48,125,255,0.035)');
-            cool.addColorStop(1, 'rgba(48,125,255,0)');
-            context.fillStyle = cool;
-            context.fillRect(0, 0, width, height);
-        }
-
         function contourOpacity(fieldIndex, ringIndex, field) {
             var edgeFade = 1 - ringIndex / (field.count + 2);
             var fieldWeight = fieldIndex < 2 ? 1 : 0.68;
@@ -140,7 +119,6 @@
         }
 
         function paintAerialField(time) {
-            drawAtmosphere(time);
             paintContours(time);
             paintWaypoints(time);
         }
