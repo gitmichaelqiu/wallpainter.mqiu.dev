@@ -339,7 +339,7 @@
             <!-- Hero Section -->
             <section id="home" class="hero">
                 <div class="hero__bg"></div>
-                <canvas ref="waveCanvas" class="absolute inset-0 z-[1] pointer-events-none"></canvas>
+                <canvas ref="aerialCanvas" class="absolute inset-0 z-[1] h-full w-full pointer-events-none" aria-hidden="true"></canvas>
                 <nav class="hero__quicknav hide-mobile">
                     <div class="hero__quicknav-logo">
                         <a href="https://mqiu.dev" aria-label="Michael Qiu Home" style="cursor:pointer!important">
@@ -758,63 +758,11 @@
     </div>
 
     <script src="scripts/i18n.js"></script>
+    <script src="scripts/aerial-landscape.js"></script>
     <script>
         /**
          * WallPainter landing page — shared DesktopRenamer layout and interactions.
          */
-
-        // ── Canvas Wave Lines ──
-        function initWaves(canvas) {
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
-            var width, height;
-            var lines = [];
-            var lineCount = 7;
-
-            function resize() {
-                var rect = canvas.parentElement.getBoundingClientRect();
-                width = canvas.width = rect.width;
-                height = canvas.height = rect.height;
-                lines = [];
-                for (var i = 0; i < lineCount; i++) {
-                    lines.push({
-                        y: (i / (lineCount - 1)) * height,
-                        amp: 15 + Math.random() * 40,
-                        freq: 0.003 + Math.random() * 0.005,
-                        speed: 0.3 + Math.random() * 0.7,
-                        phase: Math.random() * Math.PI * 2,
-                        offset: (Math.random() - 0.5) * 60
-                    });
-                }
-            }
-
-            function draw(time) {
-                ctx.clearRect(0, 0, width, height);
-                var isDark = document.documentElement.classList.contains('dark');
-                var baseAlpha = 0.12;
-                var baseColor = '255,255,255';
-
-                for (var i = 0; i < lines.length; i++) {
-                    var l = lines[i];
-                    var alpha = baseAlpha * (1 - Math.abs(i - lineCount / 2) / (lineCount / 2) * 0.5);
-                    ctx.beginPath();
-                    ctx.strokeStyle = 'rgba(' + baseColor + ',' + alpha.toFixed(3) + ')';
-                    ctx.lineWidth = isDark ? 1.2 : 1;
-                    var first = true;
-                    for (var x = -20; x <= width + 20; x += 2) {
-                        var y = l.y + Math.sin(x * l.freq + time * 0.001 * l.speed + l.phase) * l.amp + l.offset;
-                        if (first) { ctx.moveTo(x, y); first = false; }
-                        else { ctx.lineTo(x, y); }
-                    }
-                    ctx.stroke();
-                }
-                requestAnimationFrame(draw);
-            }
-
-            resize();
-            requestAnimationFrame(draw);
-            window.addEventListener('resize', resize);
-        }
 
         (function () {
             var createApp = Vue.createApp;
@@ -966,7 +914,8 @@
                     var brewCopied = ref(false);
                     var brewCopiedDR = ref(false);
                     var icon3dContainer = ref(null);
-                    var waveCanvas = ref(null);
+                    var aerialCanvas = ref(null);
+                    var stopAerialLandscape = null;
 
                     var lenis;
                     var scrollRafPending = false;
@@ -1349,7 +1298,7 @@
                     onMounted(function () {
                         initLenis();
                         initIcon3D();
-                        initWaves(waveCanvas.value);
+                        stopAerialLandscape = window.initAerialLandscape(aerialCanvas.value);
                         window.addEventListener('scroll', onScroll, { passive: true });
                         systemQuery.addEventListener('change', onSystemThemeChange);
 
@@ -1498,6 +1447,7 @@
                     onUnmounted(function () {
                         window.removeEventListener('scroll', onScroll);
                         systemQuery.removeEventListener('change', onSystemThemeChange);
+                        if (stopAerialLandscape) stopAerialLandscape();
                         if (lenis) lenis.destroy();
                     });
 
@@ -1518,7 +1468,7 @@
                         copyBrewDR: copyBrewDR,
                         brewCopiedDR: brewCopiedDR,
                         icon3dContainer: icon3dContainer,
-                        waveCanvas: waveCanvas,
+                        aerialCanvas: aerialCanvas,
                         lang: lang,
                         setLang: setLang,
                         t: t,
