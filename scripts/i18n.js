@@ -23,8 +23,8 @@ window.i18n = {
             slide2imageAlt: 'WallPainter General settings showing the installed Aerial wallpaper collection and apply actions.'
         },
         moreFeatures: {
-            apiLabel: 'DesktopRenamer SpaceAPI',
-            apiBody: 'If SpaceAPI disconnects, WallPainter pauses space-aware changes. Optional disconnect alerts are in Permissions.',
+            connectionLabel: 'Connection status',
+            connectionBody: 'If the DesktopRenamer connection is lost, per-space wallpaper changes pause. Enable disconnect alerts in Permissions.',
             protectionLabel: 'Wallpaper protection',
             protectionBody: 'Optional protection backs up mapped Aerials and tries to restore them if macOS removes them. Restoration is best-effort.'
         },
@@ -81,8 +81,8 @@ window.i18n = {
             slide2imageAlt: 'WallPainter 的“通用”设置，展示已安装的航拍壁纸及应用选项。'
         },
         moreFeatures: {
-            apiLabel: 'DesktopRenamer SpaceAPI',
-            apiBody: 'SpaceAPI 连接中断时，WallPainter 会暂停桌面相关更改。可在“权限”中选择开启断连通知。',
+            connectionLabel: '连接状态',
+            connectionBody: '与 DesktopRenamer 的连接中断时，WallPainter 会暂停按桌面更换壁纸。可在“权限”中开启断连提醒。',
             protectionLabel: '壁纸保护',
             protectionBody: '启用后，WallPainter 会备份已映射的航拍壁纸，并在 macOS 移除资源时尝试恢复。恢复能力仅为尽力而为。'
         },

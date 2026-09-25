@@ -489,11 +489,11 @@
                 <div class="container">
                     <div class="content-grid mb-16">
                         <div class="content-label" style="font-size: 1.1rem; font-weight: 500; letter-spacing: -0.02em;">
-                            {{ t('moreFeatures.apiLabel') }}
+                            {{ t('moreFeatures.connectionLabel') }}
                         </div>
                         <div class="content-body">
                             <div class="mask-wrap">
-                                <p class="paragraph-m max-w-2xl mask-inner" style="color: var(--text-primary); font-family: 'Inter', sans-serif;">{{ t('moreFeatures.apiBody') }}</p>
+                                <p class="paragraph-m max-w-2xl mask-inner" style="color: var(--text-primary); font-family: 'Inter', sans-serif;">{{ t('moreFeatures.connectionBody') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1176,6 +1176,8 @@
 
                     watch(activeSection, function (newSection, oldSection) {
                         if (!oldSection || oldSection === newSection) return;
+                        var labels = sectionLabels.value;
+                        if ((labels[oldSection] || oldSection) === (labels[newSection] || newSection)) return;
 
                         if (sectionLabelTween) {
                             sectionLabelTween.kill();
@@ -1255,9 +1257,8 @@
                         scrollRafPending = false;
                         var winHeight = window.innerHeight;
                         showNavDock.value = window.scrollY > winHeight * 0.2;
-                        var sections = ['home', 'overview', 'features', 'more-features', 'install', 'companions'];
                         var current = 'home';
-                        sections.forEach(function (id) {
+                        sectionOrder.forEach(function (id) {
                             var el = document.getElementById(id);
                             if (el) {
                                 var rect = el.getBoundingClientRect();
