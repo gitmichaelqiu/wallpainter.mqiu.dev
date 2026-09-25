@@ -355,10 +355,11 @@
                     </div>
                     <div class="hero__quicknav-cols">
                         <div class="hero__quicknav-col">
-                <div class="hero__quicknav-label">{{ t('quicknav.page') }}</div>
+                            <div class="hero__quicknav-label">{{ t('quicknav.page') }}</div>
                             <a @click.prevent="handleNavClick('overview')" href="#overview" class="hero__quicknav-link">{{ t('quicknav.overview') }}</a>
                             <a @click.prevent="handleNavClick('features')" href="#features" class="hero__quicknav-link">{{ t('quicknav.features') }}</a>
                             <a @click.prevent="handleNavClick('install')" href="#install" class="hero__quicknav-link">{{ t('quicknav.install') }}</a>
+                            <a href="https://docs.desktoprenamer.mqiu.dev/api/spaceapi/" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('moreFeatures.docs') }}</a>
                         </div>
                         <div class="hero__quicknav-col">
                             <div class="hero__quicknav-label">{{ t('quicknav.links') }}</div>
@@ -454,7 +455,7 @@
                                 <div class="md:col-span-7">
                                     <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'"
                                         :alt="t('features.slide1imageAlt')"
-                                        class="w-full rounded-lg" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                                        class="w-full rounded-lg feature-video" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                                 </div>
                             </div>
                         </div>
@@ -467,7 +468,7 @@
                                 <div class="md:col-span-7">
                                     <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'"
                                         :alt="t('features.slide2imageAlt')"
-                                        class="w-full rounded-lg" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                                        class="w-full rounded-lg feature-video" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                                 </div>
                                 <div class="md:col-span-5 md:pl-16">
                                     <p class="text-sm font-semibold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 0.01em; color: var(--klein-blue-text);">{{ t('features.slide2num') }}</p>
@@ -671,6 +672,7 @@
                             <a @click.prevent="handleNavClick('overview')" href="#overview" class="footer-nav-link">{{ t('quicknav.overview') }}</a>
                             <a @click.prevent="handleNavClick('features')" href="#features" class="footer-nav-link">{{ t('quicknav.features') }}</a>
                             <a @click.prevent="handleNavClick('install')" href="#install" class="footer-nav-link">{{ t('quicknav.install') }}</a>
+                            <a href="https://docs.desktoprenamer.mqiu.dev/api/spaceapi/" target="_blank" rel="noopener" class="footer-nav-link">{{ t('moreFeatures.docs') }}</a>
                         </div>
                     </div>
                     <div class="md:col-span-2">
