@@ -49,6 +49,11 @@ window.i18n = {
             learnMore: 'Learn More'
         },
         footer: { copyright: '© 2026 - Michael Qiu.', brand: 'WallPainter.' },
+        navDock: {
+            backToTop: 'Back to top', switchToLight: 'Switch to light mode',
+            switchToDark: 'Switch to dark mode', switchToSystem: 'Switch to system appearance',
+            openMenu: 'Open menu', closeMenu: 'Close menu'
+        },
         sidebar: { home: 'Home', overview: 'Overview', features: 'Features', install: 'Install', companions: 'Companions', github: 'GitHub' },
         sectionLabels: { home: 'Home', overview: 'Overview', features: 'Features', 'more-features': 'Features', install: 'Install', companions: 'Companions' }
     },
@@ -102,6 +107,11 @@ window.i18n = {
             learnMore: '了解更多'
         },
         footer: { copyright: '© 2026 - Michael Qiu.', brand: 'WallPainter.' },
+        navDock: {
+            backToTop: '回到顶部', switchToLight: '切换为浅色模式',
+            switchToDark: '切换为深色模式', switchToSystem: '切换为跟随系统外观',
+            openMenu: '打开菜单', closeMenu: '关闭菜单'
+        },
         sidebar: { home: '首页', overview: '概览', features: '功能', install: '安装', companions: '配套', github: 'GitHub' },
         sectionLabels: { home: '首页', overview: '概览', features: '功能', 'more-features': '功能', install: '安装', companions: '配套' }
     }
