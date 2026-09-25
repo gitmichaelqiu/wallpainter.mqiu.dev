@@ -5,7 +5,7 @@ window.i18n = {
         quicknav: {
             page: 'Page', links: 'Links', more: 'macOSers', workflowSuite: 'Workflow', mediaSuite: 'Media',
             overview: 'Overview', features: 'Features', install: 'Install',
-            github: 'GitHub', releases: 'Releases', issues: 'Report an Issue', portfolio: 'mqiu.dev',
+            github: 'GitHub', releases: 'Releases', portfolio: 'Portfolio',
             blog: 'Blog', desktoprenamer: 'DesktopRenamer', optclicker: 'OptClicker', spaceswitcher: 'SpaceSwitcher'
         },
         overview: {
@@ -58,7 +58,7 @@ window.i18n = {
         quicknav: {
             page: '页面', links: '链接', more: 'macOSers', workflowSuite: '工作流', mediaSuite: '媒体',
             overview: '概览', features: '功能', install: '安装',
-            github: 'GitHub', releases: '版本发布', issues: '报告问题', portfolio: 'mqiu.dev',
+            github: 'GitHub', releases: '版本发布', portfolio: '主页',
             blog: '博客', desktoprenamer: 'DesktopRenamer', optclicker: 'OptClicker', spaceswitcher: 'SpaceSwitcher'
         },
         overview: {

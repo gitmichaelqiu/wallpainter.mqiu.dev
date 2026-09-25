@@ -365,7 +365,6 @@
                             <div class="hero__quicknav-label">{{ t('quicknav.links') }}</div>
                             <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="hero__quicknav-link">GitHub</a>
                             <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.releases') }}</a>
-                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.issues') }}</a>
                             <a href="https://mqiu.dev" class="hero__quicknav-link">{{ t('quicknav.portfolio') }}</a>
                             <a href="https://mqiu.dev/blog" target="_blank" rel="noopener" class="hero__quicknav-link">{{ t('quicknav.blog') }}</a>
                         </div>
@@ -452,7 +451,7 @@
                                     <h3 class="heading-l mb-4" v-html="t('features.slide1title')"></h3>
                                     <p class="text-lg" style="font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-primary);">{{ t('features.slide1body') }}</p>
                                 </div>
-                                <div class="md:col-span-7">
+                                <div class="md:col-span-7 feature-image-column">
                                     <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'"
                                         :alt="t('features.slide1imageAlt')"
                                         class="w-full rounded-lg feature-video" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
@@ -465,7 +464,7 @@
                     <div class="feature-slide" style="position: sticky; top: 0; height: 70vh; display: flex; align-items: center; overflow: hidden;">
                         <div class="container" style="width: 100%;">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
-                                <div class="md:col-span-7">
+                                <div class="md:col-span-7 feature-image-column">
                                     <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'"
                                         :alt="t('features.slide2imageAlt')"
                                         class="w-full rounded-lg feature-video" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
@@ -680,7 +679,6 @@
                         <div class="flex flex-col gap-1">
                             <a href="https://github.com/gitmichaelqiu/WallPainter" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.github') }}</a>
                             <a href="https://github.com/gitmichaelqiu/WallPainter/releases" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.releases') }}</a>
-                            <a href="https://github.com/gitmichaelqiu/WallPainter/issues" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.issues') }}</a>
                             <a href="https://mqiu.dev" class="footer-nav-link">{{ t('quicknav.portfolio') }}</a>
                             <a href="https://mqiu.dev/blog" target="_blank" rel="noopener" class="footer-nav-link">{{ t('quicknav.blog') }}</a>
                         </div>
