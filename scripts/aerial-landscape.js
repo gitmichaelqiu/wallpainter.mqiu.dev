@@ -14,14 +14,41 @@
         var stopped = false;
         var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-        // Soft, drifting landmasses suggest an aerial coastline without using
-        // the rings, stars, or stroked paths that define the companion sites.
-        var formations = [
-            { x: -0.035, y: 0.55, rx: 0.22, ry: 0.28, phase: 0.4, speed: 0.9, driftX: 0.018, driftY: 0.012, shape: 0, light: 'rgba(91, 207, 222, 0.21)', deep: 'rgba(13, 69, 151, 0.10)', haze: 'rgba(56, 170, 209, 0.15)' },
-            { x: 1.025, y: 0.50, rx: 0.23, ry: 0.29, phase: 2.2, speed: 0.72, driftX: 0.014, driftY: 0.016, shape: 1, light: 'rgba(71, 183, 220, 0.19)', deep: 'rgba(17, 62, 143, 0.12)', haze: 'rgba(45, 141, 207, 0.14)' },
-            { x: 0.15, y: 1.04, rx: 0.23, ry: 0.29, phase: 4.1, speed: 0.63, driftX: 0.012, driftY: 0.009, shape: 2, light: 'rgba(72, 183, 205, 0.17)', deep: 'rgba(9, 45, 125, 0.15)', haze: 'rgba(30, 117, 190, 0.12)' },
-            { x: 0.94, y: 0.92, rx: 0.20, ry: 0.27, phase: 5.5, speed: 0.52, driftX: 0.016, driftY: 0.011, shape: 0, light: 'rgba(224, 194, 126, 0.13)', deep: 'rgba(23, 75, 150, 0.12)', haze: 'rgba(220, 190, 122, 0.08)' }
-        ];
+        var contourLevels = [0.23, 0.31, 0.39, 0.47, 0.55, 0.63, 0.71];
+        var gridColumns = 0;
+        var gridRows = 0;
+        var field = new Float32Array(0);
+
+        function gaussian(x, y, centerX, centerY, radiusX, radiusY, angle) {
+            var dx = x - centerX;
+            var dy = y - centerY;
+            var cosine = Math.cos(angle);
+            var sine = Math.sin(angle);
+            var localX = dx * cosine - dy * sine;
+            var localY = dx * sine + dy * cosine;
+            return Math.exp(-0.5 * (localX * localX / (radiusX * radiusX) + localY * localY / (radiusY * radiusY)));
+        }
+
+        function sampleElevation(x, y, time) {
+            var drift = time * 0.000035;
+            var warpedX = x + Math.sin(y * 8.1 + drift) * 0.018 + Math.sin(y * 17.2 - drift * 0.53) * 0.006;
+            var warpedY = y + Math.cos(x * 7.4 - drift * 0.8) * 0.016 + Math.sin(x * 15.3 + drift * 0.41) * 0.006;
+            var elevation =
+                gaussian(warpedX, warpedY, -0.10, 0.43, 0.23, 0.31, -0.48) * 0.78 +
+                gaussian(warpedX, warpedY, 1.09, 0.35, 0.24, 0.33, 0.52) * 0.82 +
+                gaussian(warpedX, warpedY, 0.12, 1.08, 0.34, 0.25, 0.16) * 0.72 +
+                gaussian(warpedX, warpedY, 0.94, 1.00, 0.28, 0.27, -0.61) * 0.75;
+
+            elevation += Math.sin(warpedX * 13 + warpedY * 9 + drift * 0.7) *
+                Math.cos(warpedY * 11 - warpedX * 7 - drift * 0.5) * 0.022;
+            return elevation;
+        }
+
+        function prepareField() {
+            gridColumns = Math.max(2, Math.ceil(width / 12));
+            gridRows = Math.max(2, Math.ceil(height / 12));
+            field = new Float32Array((gridColumns + 1) * (gridRows + 1));
+        }
 
         function paintAtmosphere(time) {
             var drift = time * 0.000055;
@@ -46,76 +73,199 @@
             context.fillRect(0, 0, width, height);
         }
 
-        function traceLandmass(shape) {
-            context.beginPath();
-            if (shape === 1) {
-                context.moveTo(-0.94, 0.04);
-                context.bezierCurveTo(-0.88, -0.42, -0.54, -0.90, -0.12, -0.78);
-                context.bezierCurveTo(0.22, -0.69, 0.46, -0.93, 0.82, -0.61);
-                context.bezierCurveTo(1.18, -0.29, 0.94, 0.04, 0.77, 0.26);
-                context.bezierCurveTo(0.51, 0.59, 0.18, 0.42, -0.09, 0.75);
-                context.bezierCurveTo(-0.41, 1.02, -0.56, 0.53, -0.85, 0.38);
-                context.bezierCurveTo(-1.10, 0.25, -1.13, 0.13, -0.94, 0.04);
-            } else if (shape === 2) {
-                context.moveTo(-1.00, -0.12);
-                context.bezierCurveTo(-0.79, -0.57, -0.43, -0.70, -0.12, -0.91);
-                context.bezierCurveTo(0.23, -1.12, 0.39, -0.59, 0.72, -0.58);
-                context.bezierCurveTo(1.12, -0.56, 1.19, -0.21, 0.88, 0.08);
-                context.bezierCurveTo(0.62, 0.33, 0.65, 0.70, 0.23, 0.79);
-                context.bezierCurveTo(-0.14, 0.87, -0.34, 0.50, -0.69, 0.45);
-                context.bezierCurveTo(-1.09, 0.39, -1.18, 0.10, -1.00, -0.12);
-            } else {
-                context.moveTo(-0.96, -0.08);
-                context.bezierCurveTo(-0.91, -0.57, -0.50, -0.98, -0.06, -0.81);
-                context.bezierCurveTo(0.34, -0.66, 0.43, -0.48, 0.83, -0.44);
-                context.bezierCurveTo(1.22, -0.39, 1.14, 0.04, 0.78, 0.35);
-                context.bezierCurveTo(0.46, 0.63, 0.12, 0.56, -0.15, 0.79);
-                context.bezierCurveTo(-0.50, 1.00, -0.58, 0.51, -0.87, 0.33);
-                context.bezierCurveTo(-1.15, 0.17, -1.14, 0.04, -0.96, -0.08);
-            }
-            context.closePath();
+        function crossing(x1, y1, value1, x2, y2, value2, level) {
+            var amount = (level - value1) / (value2 - value1);
+            return [x1 + (x2 - x1) * amount, y1 + (y2 - y1) * amount];
         }
 
-        function paintFormation(form, time) {
-            var drift = time * 0.00005 * form.speed + form.phase;
-            var x = width * (form.x + Math.sin(drift) * form.driftX);
-            var y = height * (form.y + Math.cos(drift * 0.83) * form.driftY);
+        function drawContourPath(points, closed) {
+            if (points.length < 2) return;
 
-            context.save();
-            context.translate(x, y);
-            context.rotate(Math.sin(drift * 0.7) * 0.025);
-            context.scale(width * form.rx, height * form.ry);
-            context.globalCompositeOperation = 'screen';
+            if (closed && points.length > 2) {
+                var lastPoint = points[points.length - 1];
+                var firstPoint = points[0];
+                context.moveTo((lastPoint[0] + firstPoint[0]) * 0.5, (lastPoint[1] + firstPoint[1]) * 0.5);
+                for (var pointIndex = 0; pointIndex < points.length; pointIndex++) {
+                    var currentPoint = points[pointIndex];
+                    var nextPoint = points[(pointIndex + 1) % points.length];
+                    context.quadraticCurveTo(
+                        currentPoint[0],
+                        currentPoint[1],
+                        (currentPoint[0] + nextPoint[0]) * 0.5,
+                        (currentPoint[1] + nextPoint[1]) * 0.5
+                    );
+                }
+                context.closePath();
+                return;
+            }
 
-            var haze = context.createRadialGradient(-0.18, -0.16, 0.04, 0, 0, 1.65);
-            haze.addColorStop(0, form.haze);
-            haze.addColorStop(0.62, 'rgba(40, 117, 194, 0.035)');
-            haze.addColorStop(1, 'rgba(40, 117, 194, 0)');
-            traceLandmass(form.shape);
-            context.fillStyle = haze;
-            context.globalAlpha = 0.8;
-            context.filter = 'blur(22px)';
-            context.fill();
-            context.filter = 'none';
+            context.moveTo(points[0][0], points[0][1]);
+            for (var openIndex = 1; openIndex < points.length - 1; openIndex++) {
+                var openPoint = points[openIndex];
+                var followingPoint = points[openIndex + 1];
+                context.quadraticCurveTo(
+                    openPoint[0],
+                    openPoint[1],
+                    (openPoint[0] + followingPoint[0]) * 0.5,
+                    (openPoint[1] + followingPoint[1]) * 0.5
+                );
+            }
+            var finalPoint = points[points.length - 1];
+            context.lineTo(finalPoint[0], finalPoint[1]);
+        }
 
-            var surface = context.createLinearGradient(-0.9, -0.8, 0.9, 0.8);
-            surface.addColorStop(0, form.light);
-            surface.addColorStop(0.48, 'rgba(39, 119, 194, 0.10)');
-            surface.addColorStop(1, form.deep);
-            traceLandmass(form.shape);
-            context.fillStyle = surface;
-            context.globalAlpha = 0.7;
-            context.fill();
+        function traceContourSegments(segments) {
+            var connections = new Map();
 
-            context.restore();
+            for (var segmentIndex = 0; segmentIndex < segments.length; segmentIndex++) {
+                var segment = segments[segmentIndex];
+                for (var endpointIndex = 0; endpointIndex < 2; endpointIndex++) {
+                    var endpoint = segment[endpointIndex];
+                    if (!connections.has(endpoint.id)) connections.set(endpoint.id, []);
+                    connections.get(endpoint.id).push({ segment: segmentIndex, endpoint: endpointIndex });
+                }
+            }
+
+            var visited = new Uint8Array(segments.length);
+
+            function trace(startKey, startConnection) {
+                var points = [segments[startConnection.segment][startConnection.endpoint].point];
+                var currentSegment = startConnection.segment;
+                var currentEndpoint = startConnection.endpoint;
+                var closed = false;
+
+                while (!visited[currentSegment]) {
+                    visited[currentSegment] = 1;
+                    var nextEndpoint = 1 - currentEndpoint;
+                    var nextNode = segments[currentSegment][nextEndpoint];
+                    if (nextNode.id === startKey) {
+                        closed = true;
+                        break;
+                    }
+                    points.push(nextNode.point);
+
+                    var links = connections.get(nextNode.id) || [];
+                    var nextConnection = null;
+                    for (var linkIndex = 0; linkIndex < links.length; linkIndex++) {
+                        if (!visited[links[linkIndex].segment]) {
+                            nextConnection = links[linkIndex];
+                            break;
+                        }
+                    }
+                    if (!nextConnection) break;
+                    currentSegment = nextConnection.segment;
+                    currentEndpoint = nextConnection.endpoint;
+                }
+
+                drawContourPath(points, closed);
+            }
+
+            connections.forEach(function (links, key) {
+                if (links.length === 2) return;
+                for (var linkIndex = 0; linkIndex < links.length; linkIndex++) {
+                    if (!visited[links[linkIndex].segment]) trace(key, links[linkIndex]);
+                }
+            });
+
+            for (var remainingIndex = 0; remainingIndex < segments.length; remainingIndex++) {
+                if (!visited[remainingIndex]) trace(segments[remainingIndex][0].id, { segment: remainingIndex, endpoint: 0 });
+            }
+        }
+
+        function paintContours(time) {
+            var cellWidth = width / gridColumns;
+            var cellHeight = height / gridRows;
+
+            for (var row = 0; row <= gridRows; row++) {
+                for (var column = 0; column <= gridColumns; column++) {
+                    var x = column * cellWidth;
+                    var y = row * cellHeight;
+                    field[row * (gridColumns + 1) + column] = sampleElevation(x / width, y / height, time);
+                }
+            }
+
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
+
+            for (var levelIndex = 0; levelIndex < contourLevels.length; levelIndex++) {
+                var level = contourLevels[levelIndex];
+                context.beginPath();
+                var segments = [];
+
+                for (var row = 0; row < gridRows; row++) {
+                    for (var column = 0; column < gridColumns; column++) {
+                        var topLeftIndex = row * (gridColumns + 1) + column;
+                        var topRightIndex = topLeftIndex + 1;
+                        var bottomLeftIndex = topLeftIndex + gridColumns + 1;
+                        var bottomRightIndex = bottomLeftIndex + 1;
+                        var topLeft = field[topLeftIndex];
+                        var topRight = field[topRightIndex];
+                        var bottomRight = field[bottomRightIndex];
+                        var bottomLeft = field[bottomLeftIndex];
+                        var x0 = column * cellWidth;
+                        var x1 = x0 + cellWidth;
+                        var y0 = row * cellHeight;
+                        var y1 = y0 + cellHeight;
+                        var points = [];
+                        var crossedEdges = [];
+
+                        if ((topLeft < level) !== (topRight < level)) {
+                            points[0] = {
+                                id: 'h' + row + ':' + column,
+                                point: crossing(x0, y0, topLeft, x1, y0, topRight, level)
+                            };
+                            crossedEdges.push(0);
+                        }
+                        if ((topRight < level) !== (bottomRight < level)) {
+                            points[1] = {
+                                id: 'v' + row + ':' + (column + 1),
+                                point: crossing(x1, y0, topRight, x1, y1, bottomRight, level)
+                            };
+                            crossedEdges.push(1);
+                        }
+                        if ((bottomRight < level) !== (bottomLeft < level)) {
+                            points[2] = {
+                                id: 'h' + (row + 1) + ':' + column,
+                                point: crossing(x1, y1, bottomRight, x0, y1, bottomLeft, level)
+                            };
+                            crossedEdges.push(2);
+                        }
+                        if ((bottomLeft < level) !== (topLeft < level)) {
+                            points[3] = {
+                                id: 'v' + row + ':' + column,
+                                point: crossing(x0, y1, bottomLeft, x0, y0, topLeft, level)
+                            };
+                            crossedEdges.push(3);
+                        }
+
+                        if (crossedEdges.length === 2) {
+                            var firstPoint = points[crossedEdges[0]];
+                            var secondPoint = points[crossedEdges[1]];
+                            segments.push([firstPoint, secondPoint]);
+                        } else if (crossedEdges.length === 4) {
+                            var centerAbove = (topLeft + topRight + bottomRight + bottomLeft) * 0.25 >= level;
+                            var edgePairs = centerAbove ? [[0, 1], [2, 3]] : [[0, 3], [1, 2]];
+                            for (var pairIndex = 0; pairIndex < edgePairs.length; pairIndex++) {
+                                var pair = edgePairs[pairIndex];
+                                segments.push([points[pair[0]], points[pair[1]]]);
+                            }
+                        }
+                    }
+                }
+
+                traceContourSegments(segments);
+                var levelDistance = Math.abs(levelIndex - (contourLevels.length - 1) * 0.5) / (contourLevels.length * 0.5);
+                var lineOpacity = 0.12 * (1 - levelDistance * 0.5);
+                context.strokeStyle = 'rgba(255, 255, 255, ' + lineOpacity.toFixed(3) + ')';
+                context.lineWidth = 1;
+                context.stroke();
+            }
         }
 
         function draw(time) {
             context.clearRect(0, 0, width, height);
             paintAtmosphere(time);
-            for (var i = 0; i < formations.length; i++) {
-                paintFormation(formations[i], time);
-            }
+            paintContours(time);
         }
 
         function animate(timestamp) {
@@ -154,6 +304,7 @@
             canvas.style.width = width + 'px';
             canvas.style.height = height + 'px';
             context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            prepareField();
             draw(elapsed);
             schedule();
         }
