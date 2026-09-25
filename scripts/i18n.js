@@ -32,7 +32,7 @@ window.i18n = {
         install: {
             label: 'Install', headingHtml: 'Get started in <span class="text-editorial" style="color: var(--gold-light); font-style: italic;">seconds.</span>',
             body: 'macOS 15.0+. No SIP disable. Drag to Applications, done.',
-            download: 'Download',
+            download: 'Download', or: 'or', copy: 'Copy',
             disclaimer: 'Not signed with a paid Apple Developer account — go to <strong>System Settings → Privacy &amp; Security</strong> if macOS blocks the app. Permissions are guided on first launch.'
         },
         companions: {
@@ -85,7 +85,7 @@ window.i18n = {
         install: {
             label: '安装', headingHtml: '即刻<span class="text-editorial" style="color: var(--gold-light);">开始。</span>',
             body: 'macOS 15.0+。无需禁用 SIP。拖入 Applications 文件夹，完成。',
-            download: '下载',
+            download: '下载', or: '或', copy: '复制',
             disclaimer: '未使用付费 Apple 开发者账号签名——如果 macOS 阻止该应用，请前往<strong>系统设置 → 隐私与安全性</strong>。首次启动时会引导完成权限设置。'
         },
         companions: {

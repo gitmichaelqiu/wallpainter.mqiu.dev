@@ -536,6 +536,17 @@
                                         <span data-btn-text style="color: var(--klein-blue);">{{ t('install.download') }}</span>
                                     </div>
                                 </a>
+                                <span class="self-center" style="font-size: 1.1rem; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; font-weight: 400;">{{ t('install.or') }}</span>
+                                <code class="brew-cmd" style="display: flex; align-items: center; gap: 0.8rem; padding: 1.0rem 1.2rem 1.0rem 1.8rem; font-size: 0.9rem; letter-spacing: 0.02em; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); word-break: break-all;">
+                                    brew install --cask gitmichaelqiu/tap/wallpainter
+                                    <button @click="copyBrew" :title="t('install.copy')" :aria-label="t('install.copy')"
+                                        style="flex-shrink: 0; width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s ease;"
+                                        onmouseenter="this.style.background='rgba(255,255,255,0.15)'; this.style.color='rgba(255,255,255,1)';"
+                                        onmouseleave="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.7)';">
+                                        <svg v-show="brewCopied" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        <svg v-show="!brewCopied" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </code>
                             </div>
                             <p style="font-size: 0.85rem; letter-spacing: -0.02em; color: rgba(255,255,255,0.6); max-width: 36rem;" v-html="t('install.disclaimer')">
                             </p>
@@ -923,6 +934,7 @@
                     var activeSection = ref('home');
                     var showNavDock = ref(false);
                     var navDockBottom = ref('2rem');
+                    var brewCopied = ref(false);
                     var icon3dContainer = ref(null);
                     var waveCanvas = ref(null);
 
@@ -1124,6 +1136,13 @@
                     function scrollToTop() {
                         if (isSidebarOpen.value) return;
                         if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+                    }
+
+                    function copyBrew() {
+                        navigator.clipboard.writeText('brew install --cask gitmichaelqiu/tap/wallpainter').then(function () {
+                            brewCopied.value = true;
+                            setTimeout(function () { brewCopied.value = false; }, 1500);
+                        }).catch(function () {});
                     }
 
                     // ── Sidebar ──
@@ -1457,6 +1476,8 @@
                         isDark: isDark,
                         themeMode: themeMode,
                         toggleTheme: toggleTheme,
+                        copyBrew: copyBrew,
+                        brewCopied: brewCopied,
                         icon3dContainer: icon3dContainer,
                         waveCanvas: waveCanvas,
                         lang: lang,
