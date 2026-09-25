@@ -24,16 +24,16 @@ window.i18n = {
         },
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
-            apiBody: 'Per-space automation requires DesktopRenamer SpaceAPI. If it disconnects, WallPainter pauses space-aware changes. Optional disconnect alerts are in Permissions.',
-            docs: 'SpaceAPI Guide',
+            apiBody: 'If SpaceAPI disconnects, WallPainter pauses space-aware changes. Optional disconnect alerts are in Permissions.',
             protectionLabel: 'Wallpaper protection',
             protectionBody: 'Optional protection backs up mapped Aerials and tries to restore them if macOS removes them. Restoration is best-effort.'
         },
         install: {
             label: 'Install', headingHtml: 'Get started in <span class="text-editorial" style="color: var(--gold-light); font-style: italic;">seconds.</span>',
-            body: 'macOS 15.0+. No SIP disable. Drag to Applications, done.',
+            body: 'macOS 15.0+. Requires DesktopRenamer with SpaceAPI enabled. No SIP changes needed. Drag to Applications, done.',
             download: 'Download', or: 'or', copy: 'Copy',
-            disclaimer: 'Not signed with a paid Apple Developer account — go to <strong>System Settings → Privacy &amp; Security</strong> if macOS blocks the app. Permissions are guided on first launch.'
+            disclaimer: 'Not signed with a paid Apple Developer account — go to <strong>System Settings → Privacy &amp; Security</strong> if macOS blocks the app. Permissions are guided on first launch.',
+            prerequisite: 'Prerequisite: Install DesktopRenamer first.', downloadDR: 'Download DesktopRenamer', orDR: 'or', copyDR: 'Copy'
         },
         companions: {
             label: 'Companions', workflowSuite: 'Workflow', mediaSuite: 'Media',
@@ -82,16 +82,16 @@ window.i18n = {
         },
         moreFeatures: {
             apiLabel: 'DesktopRenamer SpaceAPI',
-            apiBody: '按桌面自动切换需要 DesktopRenamer SpaceAPI。连接中断时，WallPainter 会暂停桌面相关更改。可在“权限”中选择开启断连通知。',
-            docs: 'SpaceAPI 指南',
+            apiBody: 'SpaceAPI 连接中断时，WallPainter 会暂停桌面相关更改。可在“权限”中选择开启断连通知。',
             protectionLabel: '壁纸保护',
             protectionBody: '启用后，WallPainter 会备份已映射的航拍壁纸，并在 macOS 移除资源时尝试恢复。恢复能力仅为尽力而为。'
         },
         install: {
             label: '安装', headingHtml: '即刻<span class="text-editorial" style="color: var(--gold-light);">开始。</span>',
-            body: 'macOS 15.0+。无需禁用 SIP。拖入 Applications 文件夹，完成。',
+            body: 'macOS 15.0+。需要先安装 DesktopRenamer 并启用 SpaceAPI。无需禁用 SIP。拖入 Applications 文件夹，完成。',
             download: '下载', or: '或', copy: '复制',
-            disclaimer: '未使用付费 Apple 开发者账号签名——如果 macOS 阻止该应用，请前往<strong>系统设置 → 隐私与安全性</strong>。首次启动时会引导完成权限设置。'
+            disclaimer: '未使用付费 Apple 开发者账号签名——如果 macOS 阻止该应用，请前往<strong>系统设置 → 隐私与安全性</strong>。首次启动时会引导完成权限设置。',
+            prerequisite: '前置：请先安装 DesktopRenamer。', downloadDR: '下载 DesktopRenamer', orDR: '或', copyDR: '复制'
         },
         companions: {
             label: '配套', workflowSuite: '工作流', mediaSuite: '媒体',
