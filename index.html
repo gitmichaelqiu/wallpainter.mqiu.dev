@@ -968,8 +968,22 @@
                     }
 
                     function initIcon3D() {
+                        var resolveHeroTexture;
+                        var heroTextureResolved = false;
+                        window.__criticalHeroImageReady = new Promise(function (resolve) {
+                            resolveHeroTexture = resolve;
+                        });
+                        function finishHeroTexture() {
+                            if (heroTextureResolved) return;
+                            heroTextureResolved = true;
+                            resolveHeroTexture();
+                        }
+
                         var container = icon3dContainer.value;
-                        if (!container || typeof THREE === 'undefined') return;
+                        if (!container || typeof THREE === 'undefined') {
+                            finishHeroTexture();
+                            return;
+                        }
                         var size = container.clientWidth || container.clientHeight || 280;
                         if (size < 10) { size = 280; }
                         container.innerHTML = '';
@@ -1011,14 +1025,20 @@
                         geometry.center();
 
                         var materialSide = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.2, metalness: 0.8 });
-                        var materialFront = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.1 });
+                        var materialFront = new THREE.MeshStandardMaterial({ color: 0x002fa7, roughness: 0.2, metalness: 0.1 });
                         var textureLoader = new THREE.TextureLoader();
-                        textureLoader.load('resources/works/wallpainter.webp', function (tex) {
-                            tex.center.set(0.5, 0.5);
-                            tex.encoding = THREE.sRGBEncoding;
-                            materialFront.map = tex;
-                            materialFront.needsUpdate = true;
-                        });
+                        try {
+                            textureLoader.load('resources/works/wallpainter.webp', function (tex) {
+                                tex.center.set(0.5, 0.5);
+                                tex.encoding = THREE.sRGBEncoding;
+                                materialFront.map = tex;
+                                materialFront.color.setHex(0xffffff);
+                                materialFront.needsUpdate = true;
+                                finishHeroTexture();
+                            }, undefined, finishHeroTexture);
+                        } catch (error) {
+                            finishHeroTexture();
+                        }
                         iconMesh = new THREE.Mesh(geometry, [materialFront, materialSide]);
                         iconMesh.rotation.x = 0.2;
                         iconMesh.rotation.y = -0.3;
