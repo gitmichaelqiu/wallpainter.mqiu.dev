@@ -130,6 +130,7 @@
     <style>
         #app[v-cloak] { visibility: hidden; }
     </style>
+    <link rel="preload" as="image" href="resources/works/wallpainter.webp" type="image/webp" fetchpriority="high">
 </head>
 
 <body class="theme-base">
@@ -166,169 +167,28 @@
     </div>
     <script>
     (function() {
-        // Lock scroll while preloader is visible
         document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
         var preloaderEl = document.getElementById('preloader');
         window.__blockScroll = function(e) { e.preventDefault(); e.stopPropagation(); };
-        preloaderEl.addEventListener('wheel', window.__blockScroll, { passive: false, capture: true });
-        preloaderEl.addEventListener('touchmove', window.__blockScroll, { passive: false, capture: true });
-
-        var RESOURCES = [
-            'resources/works/wallpainter.png',
-            'resources/works/space-switcher.png',
-            'resources/works/opt-clicker.png',
-            'resources/works/desktop-renamer.png',
-            'resources/works/vtplayer-app-icon.png',
-            'resources/images/general-light.png',
-            'resources/images/general-dark.png',
-            'resources/images/automation-light.png',
-            'resources/images/automation-dark.png'
-        ];
-        var IMG_RE = /\.(png|jpe?g|gif|webp|svg|ico)(\?|$)/i;
-        var VID_RE = /\.(mp4|webm|mov)(\?|$)/i;
-        var fill = document.querySelector('#preloader-clip rect');
-        var textEl = document.getElementById('preloader-text-base');
-        var markWrap = document.querySelector('.preloader-mark-wrap');
-        if (markWrap && textEl) {
-            try {
-                var extraCharacters = Math.max(0, textEl.textContent.trim().length - 'mqiu.dev'.length);
-                markWrap.style.setProperty('--dot-x-scale', Math.min(1.6, 1 + extraCharacters * 0.15));
-            } catch (e) {}
+        if (preloaderEl) {
+            preloaderEl.addEventListener('wheel', window.__blockScroll, { passive: false, capture: true });
+            preloaderEl.addEventListener('touchmove', window.__blockScroll, { passive: false, capture: true });
         }
 
-        window.__resourcesReady = new Promise(function(resolve) {
-            var total   = RESOURCES.length + 1;
-            var loaded  = 0;
-            var settled = false;
-
-            // Track actual loading progress
-            var targetProgress = 0;
-            var displayedProgress = 0;
-
-            // Start animation loop
-            var lastTime = Date.now();
-            var minDuration = 800; // minimum duration in ms for 0% to 100% (fast and responsive)
-
-            function frame() {
-                var now = Date.now();
-                var dt = now - lastTime;
-                lastTime = now;
-
-                // Target progress based on resources loaded
-                targetProgress = total > 0 ? (loaded / total) : 1;
-
-                if (displayedProgress < targetProgress || targetProgress === 1) {
-                    // Advance displayed progress at a rate of 100% per minDuration
-                    displayedProgress += dt / minDuration;
-                    if (displayedProgress > targetProgress && targetProgress < 1) {
-                        displayedProgress = targetProgress;
-                    }
-                }
-
-                if (displayedProgress >= 1) {
-                    displayedProgress = 1;
-                }
-
-                // Calculate dynamic text width using getBBox to map progress exactly to text letters
-                var textWidth = 220; // fallback
-                var textX = 0; // fallback
-                if (textEl) {
-                    try {
-                        var bbox = textEl.getBBox();
-                        if (bbox && bbox.width > 0) {
-                            textWidth = bbox.width;
-                            textX = bbox.x;
-                        }
-                    } catch(e) {}
-                }
-
-                // Update DOM elements
-                if (fill) {
-                    fill.setAttribute('x', textX);
-                    fill.setAttribute('width', displayedProgress * textWidth);
-                }
-                if (displayedProgress >= 1 && loaded >= total) {
-                    if (!settled) {
-                        settled = true;
-                        // Add transitions for the final complete state
-                        if (fill) {
-                            fill.style.transition = 'width 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
-                            fill.setAttribute('width', textWidth);
-                        }
-                        setTimeout(resolve, 300);
-                    }
-                } else {
-                    requestAnimationFrame(frame);
-                }
-            }
-
-            // Start the loop
-            requestAnimationFrame(frame);
-
-            // Resource loading listeners
-            function itemLoaded() {
-                loaded = Math.min(total, loaded + 1);
-            }
-
-            // Keep the preloader up until eager page assets and fonts are ready.
-            function markPageReady() {
-                var fontsReady = document.fonts && document.fonts.ready;
-                if (fontsReady) {
-                    fontsReady.then(itemLoaded, itemLoaded);
-                } else {
-                    itemLoaded();
-                }
-            }
-            if (document.readyState === 'complete') {
-                markPageReady();
-            } else {
-                window.addEventListener('load', markPageReady, { once: true });
-            }
-
-            if (total === 0) {
-                loaded = 0;
-            } else {
-                RESOURCES.forEach(function(url) {
-                    if (IMG_RE.test(url)) {
-                        var img = new Image();
-                        var imageDone = false;
-                        function markImageDone(waitForDecode) {
-                            if (imageDone) return;
-                            imageDone = true;
-                            if (waitForDecode && typeof img.decode === 'function') {
-                                try {
-                                    img.decode().then(itemLoaded, itemLoaded);
-                                } catch (e) {
-                                    itemLoaded();
-                                }
-                            } else {
-                                itemLoaded();
-                            }
-                        }
-                        img.onload = function() { markImageDone(true); };
-                        img.onerror = function() { markImageDone(false); };
-                        img.src = url;
-                    } else if (VID_RE.test(url)) {
-                        var vid = document.createElement('video');
-                        vid.preload = 'auto';
-                        var done = false;
-                        function markDone() {
-                            if (!done) { done = true; itemLoaded(); }
-                        }
-                        vid.oncanplay = markDone;
-                        vid.onerror = markDone;
-                        vid.src = url;
-                        vid.load();
-                        setTimeout(markDone, 15000);
-                    } else {
-                        fetch(url).then(itemLoaded).catch(itemLoaded);
-                    }
-                });
-            }
-        });
+        // The branded reveal now waits for the Vue app to mount, not optional media.
+        window.__resourcesReady = Promise.resolve();
+        var fill = document.querySelector('#preloader-clip rect');
+        var textEl = document.getElementById('preloader-text-base');
+        if (fill && textEl) {
+            try {
+                var bounds = textEl.getBBox();
+                fill.setAttribute('x', bounds.x);
+                fill.setAttribute('width', bounds.width);
+            } catch (e) {}
+        }
     })();
-    </script>
+</script>
 
     <div id="app" v-cloak class="relative min-h-screen">
         <!-- Architectural Grid Lines -->
@@ -481,8 +341,8 @@
                                 </div>
                                 <div class="md:col-span-7 feature-image-column">
                                     <div class="relative overflow-hidden rounded-lg feature-video feature-image-frame" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <img :src="isDark ? 'resources/images/automation-dark.png' : 'resources/images/automation-light.png'"
-                                            :alt="t('features.slide1imageAlt')" class="w-full">
+                                        <img :src="isDark ? 'resources/images/automation-dark.webp' : 'resources/images/automation-light.webp'"
+                                            :alt="t('features.slide1imageAlt')" class="w-full" loading="lazy" decoding="async" width="1500" height="1204">
                                     </div>
                                 </div>
                             </div>
@@ -495,8 +355,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-0 items-center">
                                 <div class="md:col-span-7 feature-image-column">
                                     <div class="relative overflow-hidden rounded-lg feature-video feature-image-frame" style="box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-                                        <img :src="isDark ? 'resources/images/general-dark.png' : 'resources/images/general-light.png'"
-                                            :alt="t('features.slide2imageAlt')" class="w-full">
+                                        <img :src="isDark ? 'resources/images/general-dark.webp' : 'resources/images/general-light.webp'"
+                                            :alt="t('features.slide2imageAlt')" class="w-full" loading="lazy" decoding="async" width="1500" height="1204">
                                     </div>
                                 </div>
                                 <div class="md:col-span-5 md:pl-16">
@@ -642,7 +502,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <img src="resources/works/desktop-renamer.png" data-hover-follower class="card-subimg">
+                            <img src="resources/works/desktop-renamer.webp" data-hover-follower class="card-subimg" loading="lazy" decoding="async" width="400" height="400">
                         </div>
 
                         <!-- OptClicker -->
@@ -658,7 +518,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <img src="resources/works/opt-clicker.png" data-hover-follower class="card-subimg">
+                            <img src="resources/works/opt-clicker.webp" data-hover-follower class="card-subimg" loading="lazy" decoding="async" width="400" height="400">
                         </div>
 
                         <!-- SpaceSwitcher -->
@@ -674,7 +534,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <img src="resources/works/space-switcher.png" data-hover-follower class="card-subimg">
+                            <img src="resources/works/space-switcher.webp" data-hover-follower class="card-subimg" loading="lazy" decoding="async" width="400" height="400">
                         </div>
 
                     </div>
@@ -693,7 +553,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <img src="resources/works/vtplayer-app-icon.png" data-hover-follower class="card-subimg">
+                            <img src="resources/works/vtplayer-app-icon.webp" data-hover-follower class="card-subimg" loading="lazy" decoding="async" width="400" height="400">
                         </div>
                     </div>
                 </div>
@@ -784,6 +644,7 @@
     </div>
 
     <script src="scripts/i18n.js"></script>
+    <script src="scripts/lazy-media.js"></script>
     <script src="scripts/aerial-landscape.js?v=4"></script>
     <script>
         /**
@@ -1095,7 +956,7 @@
                         var materialSide = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.2, metalness: 0.8 });
                         var materialFront = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.1 });
                         var textureLoader = new THREE.TextureLoader();
-                        textureLoader.load('resources/works/wallpainter.png', function (tex) {
+                        textureLoader.load('resources/works/wallpainter.webp', function (tex) {
                             tex.center.set(0.5, 0.5);
                             tex.encoding = THREE.sRGBEncoding;
                             materialFront.map = tex;
@@ -1354,7 +1215,7 @@
                             // Reveal body immediately so preloader is visible
                             gsap.set('body', { opacity: 1 });
 
-                            // ── Animation Sequence (gated on resource preloader) ──
+                            // ── Animation Sequence (starts after the Vue app mounts) ──
                             (window.__resourcesReady || Promise.resolve()).then(function() {
                                 var tl = gsap.timeline();
 
@@ -1368,6 +1229,7 @@
                                             el.removeEventListener('touchmove', window.__blockScroll, { capture: true });
                                         }
                                         document.documentElement.classList.add('preloader-complete');
+                                        window.dispatchEvent(new Event('mqiu:app-ready'));
                                         document.body.style.overflow = '';
                                         document.documentElement.style.overflow = '';
                                     } })
